@@ -39,6 +39,8 @@ INSTALLED_APPS = (
     'timesheets',
 )
 
+AUTH_PROFILE_MODULE = 'timesheets.employee'
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
