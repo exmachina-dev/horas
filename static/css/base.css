@@ -1,0 +1,281 @@
+body {
+    background: url('/static/img/bg3.jpg') fixed center no-repeat #fff;
+    background-size: cover;
+    margin: auto;
+}
+
+#header {
+    background: url('/static/img/header.png') no-repeat transparent;
+    box-sizing: content-box;
+    opacity: 0.9;
+    height: 101px;
+    width: 1240px;
+    margin: 0px;
+    padding: 0px 30px;
+    padding-top: 24px;
+    text-align: center
+}
+#header p#session {
+    display: inline-block;
+    padding: 3px 6px;
+    margin: auto;
+    font-family: monospace;
+    font-size: 0.85em;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: rgba(0, 0, 0, 0.06);
+    border-top: 0px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+#header p#session a {
+    color: rgba(0, 0, 0, 0.6);
+    text-decoration: none;
+    transition: color 500ms ease, background-color 250ms ease;
+    -webkit-transition: color 500ms ease, background-color 250ms ease;
+}
+#header p#session a:hover {
+    color: rgba(0, 0, 0, 1);
+}
+
+/* Menu */
+
+ul#menu {
+    background: url('/static/img/menu.png') repeat-x bottom transparent;
+    margin: 0px;
+    margin-left: 18px;
+    float: left;
+    width: 116px;
+    height: auto;
+    padding: 20px;
+    padding-top: 15px;
+    list-style-type: none;
+    text-align: right;
+    font-family: monospace;
+}
+
+form#search {
+    display: list-item;
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 4px;
+    text-align: center;
+}
+form#search input {
+    -webkit-appearance: none;
+    box-sizing: content-box;
+    display: inline-block;
+    width: auto;
+    padding: 2px 4px;
+    margin: 0px;
+    color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 0px;
+    height: 19px;
+    font-family: monospace;
+}
+form#search input:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom: 0px;
+    text-align: left;
+    width: 107px;
+}
+form#search input:last-child {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    width: 107px;
+    height: auto;
+}
+
+ul#menu a, ul#menu a:hover {
+    display: block;
+    padding: 2px 4px;
+    color: rgba(0, 0, 0, 0.6);
+    text-decoration: none;
+    font-family: monospace;
+    background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-top: 0px;
+}
+
+ul#menu a, ul#menu input {
+    transition: color 500ms ease, background-color 250ms ease;
+    -webkit-transition: color 500ms ease, background-color 250ms ease;
+}
+
+ul#menu a:hover, ul#menu input:hover {
+    color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(0, 0, 0, 0.3);
+}
+ul#menu input:first-child:focus, ul#menu input:first-child:hover {
+    color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+
+ul#menu .separator {
+    background: url('/static/img/menu.png') repeat-x bottom transparent;
+    height: 1px;
+    width: 30%;
+    margin: 4px auto;
+}
+
+ul#menu > li.separator + li >a {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+ul#menu > li:first-child > a, ul#menu > li.separator + li >a {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+ul#menu > li:first-child > a,
+ul#menu > li:last-child > a,
+ul#menu > li:nth-child(7) >a,
+ul#menu > li:nth-child(9) >a {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+/* Contenu */
+
+#content {
+    background: url('/static/img/body.png') repeat-y right transparent;
+    opacity: 0.87;
+    min-height: 250px;
+    margin: 0px;
+    padding: 5px;
+}
+#content > *{
+    margin: 0px;
+    margin-left: 180px;
+    margin-right: 27px;
+    padding: 20px;
+    font-family: monospace;
+}
+
+#content a, #content a:hover {
+    color: #666;
+    text-decoration: underline;
+}
+#content a:hover {
+    color: #000;
+}
+#content .float {
+    float: right;
+}
+
+#footer {
+    background: url('/static/img/footer.png') no-repeat transparent;
+    min-height: 25px;
+    width: 1240px;
+    margin: 0px;
+    margin-bottom: 20px;
+    padding: 0px 30px;
+    padding-top: 5px;
+    clear: both;
+    text-align: right;
+    color: #fff;
+    font-family: monospace;
+    font-size: 0.7em;
+}
+
+/* Tables */
+
+#content table {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-collapse: collapse;
+    empty-cells: hide;
+    width: auto;
+    font-family: monospace;
+    display: block;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.03);
+    overflow-x: scroll;
+}
+
+#content table tr {
+    width: auto;
+    background: rgba(0, 127, 255, 0.02);
+}
+
+#content table td.alt, #content table tr.alt {
+    background: rgba(0, 127, 255, 0.1);
+}
+#content table tr th {
+    font-weight: bold;
+    font-size: 0.8em;
+    padding: 2px 5px;
+    background: rgba(0, 0, 0, 0.08);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+#content table td {
+    empty-cells: hide;
+    border: 1px solid #aaa;
+    padding: 2px 5px;
+}
+
+#content table td.employee_hour_tag, #content table td.empty_hour_tag {
+    display: table-cell;
+    min-width: 2.5em;
+}
+#content table td.project_cell {
+    min-width: 20em;
+}
+#content table td.subproject_cell {
+    border-left: 0px;
+}
+
+#content table td.billet_spectacle, #content table td.seance_spectacle, #content table td.taux_spectacle, #content table td.taux_spectacle_taux {
+    background: rgba(0, 0, 0, 0.06);
+    padding: 2px 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    font-style: italic;
+    box-shadow: 0px 2px 4px 2px rgba(255, 255, 255, 0.35) inset;
+    text-shadow: 1px 1px 2px rgba(0,0,0, 0.1);
+}
+#content table td.taux_spectacle_taux {
+    font-style: normal;
+}
+#content table td.table_actions {
+    text-align: center;
+}
+
+#content table td.taux_spectacle_taux, #content table td.taux_seance_taux {
+    font-size: 0.8em;
+}
+
+#content table td meter {
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.03);
+    height: 0.9em;
+    width: 20em;
+    -webkit-appearance: none;
+}
+#content table td meter::-webkit-meter-bar {
+    background: #eee;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 1px;
+}
+#content table td meter::-webkit-meter-optimum-value {
+    background: rgba(0, 255, 0, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+}
+
+#content table td meter::-webkit-meter-suboptimum-value {
+    background: rgba(255, 0, 0, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+}
+
+#content table td meter::-webkit-meter-even-less-good-value {
+    background: rgba(255, 0, 127, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+}
