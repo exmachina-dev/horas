@@ -11,7 +11,7 @@ from datetime import timedelta
 @login_required
 def home(request, from_date=date.today()-timedelta(days=13), to_date=date.today()):
     employees = Employee.objects.all()
-    subprojects = SubProject.objects.all()
+    subprojects = SubProject.objects.exclude(finished=True)
     date_span = (to_date - from_date).days + 1
     day_range = [to_date - timedelta(days=x) for x in range(0, date_span)]
     day_range.reverse()
