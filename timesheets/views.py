@@ -37,7 +37,7 @@ def home(request, from_date=date.today()-timedelta(days=13), to_date=date.today(
         })
 
     context = {
-        'employees': employees,
+        'employees': employees.order_by('user__username'),
         'subprojects': subprojects,
         'days': day_range,
         'timesheet': timesheet,
@@ -86,7 +86,7 @@ def timesheet(request, employee=None, from_date=date.today()-timedelta(days=7), 
         })
 
     context = {
-        'employees': employees,
+        'employees': employees.order_by('user__username'),
         'subprojects': subprojects,
         'days': day_range,
         'timesheet': timesheet,
