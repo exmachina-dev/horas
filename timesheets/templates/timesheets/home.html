@@ -2,9 +2,9 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<ul>
+<ul class="employee_legend">
     {% for employee in employees %}
-    <li><a href="{% url 'timesheets:timesheet_by_employee' employee=employee.user.username %}">{{ employee.user.username }}</a></li>
+    <li style="color: #eee; background-color: {{ employee.color }};"><a href="{% url 'timesheets:timesheet_by_employee' employee=employee.user.username %}">{{ employee.user.username }}</a></li>
     {% endfor %}
 </ul>
 {% include "timesheets/timeline_multiple.html" %}

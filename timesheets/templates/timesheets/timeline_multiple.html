@@ -1,7 +1,12 @@
 {% load math_filters %}
 <table>
 <tr>
-    <th colspan="2">Project</th>
+    <th rowspan="2" colspan="2">Project</th>
+    {% for day in days %}
+    <th colspan="{{ employees|length }}">{{ day|date:"W" }}</th>
+    {% endfor %}
+</tr>
+<tr>
     {% for day in days %}
     <th colspan="{{ employees|length }}">{{ day|date:"D j" }}</th>
     {% endfor %}
@@ -26,11 +31,12 @@
     {% for day in record.timesheet %}
         {% for line in day.timerecords %}
         <td class="employee_hour_tag" style="color: #eee; background-color: {{ line.employee.color }};">
-            <span>{{ line.employee.user.username }}</span>{{ line.hours|fhours }}
+            {{ line.hours|fhours }}
+            <span class="bubble">{{ line.employee.user.username }}</span>
+        </td>
         {% if forloop.last and forloop.counter < employees|length %}
         <td colspan="{{ employees|length|substract:forloop.counter }}"></td>
         {% endif %}
-        </td>
         {% empty %}
         {% for e in employees %}
         <td class="empty_hour_tag"></td>
