@@ -1,0 +1,11 @@
+{% extends 'struct/base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<ul>
+    {% for employee in employees %}
+    <li><a href="{% url 'timesheets:timesheet_by_employee' employee=employee.user.username %}">{{ employee.user.username }}</a></li>
+    {% endfor %}
+</ul>
+{% include "timesheets/timeline_multiple.html" %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% load math_filters %}
+<table>
+<tr>
+    <th colspan="2">Project</th>
+    {% for day in days %}
+    <th colspan="{{ employees|length }}">{{ day|date:"D j" }}</th>
+    {% endfor %}
+</tr>
+{% for record in timesheet %}
+{% ifchanged record.parent_project %}
+<tr>
+    <td class="project_cell" colspan="2">{{ record.parent_project.initials|upper}} - {{ record.parent_project.name }}</td>
+    {% for day in days %}
+    <td colspan="{{ employees|length }}">{{ record.project.parent_project.total_hours|fhours }}</td>
+    {% endfor %}
+</tr>
+{% endifchanged %}
+<tr class="{% cycle "" "alt" %}">
+    <td rowspan="2"></td>
+    <td class="subproject_cell" rowspan="2">{{ record.project.initials|upper}} - {{ record.project.name }}</td>
+    {% for day in record.timesheet %}
+    <td colspan="{{ employees|length }}">{{ day.total_hours|fhours }}</td>
+    {% endfor %}
+</tr>
+<tr class="{% cycle "" "alt" %}">
+    {% for day in record.timesheet %}
+        {% for line in day.timerecords %}
+        <td class="employee_hour_tag" style="color: #eee; background-color: {{ line.employee.color }};">
+            <span>{{ line.employee.user.username }}</span>{{ line.hours|fhours }}
+        {% if forloop.last and forloop.counter < employees|length %}
+        <td colspan="{{ employees|length|substract:forloop.counter }}"></td>
+        {% endif %}
+        </td>
+        {% empty %}
+        {% for e in employees %}
+        <td class="empty_hour_tag"></td>
+        {% endfor %}
+        {% endfor %}
+    {% endfor %}
+</tr>
+{% endfor %}
+</table>

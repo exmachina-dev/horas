@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+{% load staticfiles %}
+<html lang="fr">
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <title>{% block title %}No title{% endblock %} - Horas</title>
+        <link rel="stylesheet" href="{% static "css/base.css" %}" type="text/css" />
+        <link rel="stylesheet" href="{% static "css/icons.css" %}" type="text/css" />
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        {% if form %}<link rel="stylesheet" href="{{ STATIC_URL }}css/forms.css" type="text/css" />{% endif %}
+        {% if table %}<link rel="stylesheet" href="{{ STATIC_URL }}css/tables.css" type="text/css" />{% endif %}
+        {% if detail %}<link rel="stylesheet" href="{{ STATIC_URL }}css/details.css" type="text/css" />{% endif %}
+        {% if plan %}<link rel="stylesheet" href="{{ STATIC_URL }}css/plan.css" type="text/css" />{% endif %}
+    </head>
+    <body>
+        <div id="header">
+            {% if user.is_authenticated %}
+            <p id="session">Logged as {{ user.username }} - <a href="{% url 'logout' %}">logout</a></p>
+            {% endif %}
+            {% if messages %}
+            <div id="messages">
+                {% for messange in messages %}
+                <p class="{{ message.class }}">{{ message.text }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div id="content">
+            <ul id="menu">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li class="separator"></li>
+
+                <li class="separator"></li>
+                <li class="separator"></li>
+                <li class="separator"></li>
+            </ul>
+            {% block content %}{% endblock %}
+        </div>
+        {% block footer %}
+        <p id="footer">Horas - Developed with &#9829; by WillyKaze</p>
+        {% endblock %}
+    </body>
+</html>
