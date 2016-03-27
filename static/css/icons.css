@@ -1,0 +1,130 @@
+.ico_add, .but_add {
+    background: url('/static/img/icons/add.png') no-repeat left top;
+}
+
+.ico_edit, .but_edit {
+    background: url('/static/img/icons/pencil.png') no-repeat left top;
+}
+
+.ico_delete, .but_delete {
+    background: url('/static/img/icons/delete.png') no-repeat left top;
+}
+
+.ico_print, .but_print {
+    background: url('/static/img/icons/printer.png') no-repeat left top;
+}
+
+.ico_view, .but_view {
+    background: url('/static/img/icons/magnifier.png') no-repeat left top;
+}
+
+.ico_filter, .but_filter {
+    background: url('/static/img/icons/filter.png') no-repeat left top;
+}
+
+.ico_filter_nofilter, .but_filter_nofilter {
+    background: url('/static/img/icons/filter-delete.png') no-repeat left top;
+}
+
+.ico_filter_print, .but_filter_print {
+    background: url('/static/img/icons/filter-green.png') no-repeat left top;
+}
+
+.ico_filter_noprint, .but_filter_noprint {
+    background: url('/static/img/icons/filter-red.png') no-repeat left top;
+}
+
+
+.ico_add, .but_add,
+.ico_edit, .but_edit,
+.ico_delete, .but_delete,
+.ico_print, .but_print,
+.ico_view, .but_view,
+.ico_filter, .but_filter,
+.ico_filter_nofilter, .but_filter_nofilter, 
+.ico_filter_print, .but_filter_print, 
+.ico_filter_noprint, .but_filter_noprint {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    padding-left: 18px;
+    padding-top: 2px;
+    margin: 0px 2px;
+    height: 16px;
+    vertical-align: middle;
+    font-size: 0.85em;
+    text-shadow: 1px 1px 2px rgba(0, 0 ,0, 0);
+    transition: color 250ms ease, text-shadow 500ms ease, background-color 500ms ease;
+    -webkit-transition: color 250ms ease, text-shadow 500ms ease, background-color 500ms ease;
+}
+
+.ico_add:hover,
+.ico_edit:hover,
+.ico_delete:hover,
+.ico_print:hover,
+.ico_view:hover,
+.ico_filter:hover,
+.ico_filter_nofilter:hover,
+.ico_filter_print:hover,
+.ico_filter_noprint:hover {
+    text-shadow: 1px 1px 2px rgba(0, 0 ,0, 0.4);
+    margin-left: 3px;
+    margin-right: 1px;
+}
+.but_add:hover,
+.but_edit:hover,
+.but_delete:hover,
+.but_print:hover,
+.but_view:hover,
+.but_filter:hover,
+.but_filter_nofilter:hover, 
+.but_filter_print:hover, 
+.but_filter_noprint:hover {
+    background-color: rgba(0, 255, 0, 0.5);
+}
+
+.but_add,
+.but_edit,
+.but_delete,
+.but_print,
+.but_view,
+.but_filter,
+.but_filter_nofilter,
+.but_filter_print,
+.but_filter_noprint {
+    overflow: hidden;
+    width: 0px;
+    margin: 0px;
+    padding: 0px;
+    padding-left: 16px;
+}
+
+#contenu .jauge,
+#contenu .jauge_presquepleine,
+#contenu .jauge_pleine,
+#contenu .jauge_troppleine,
+#contenu .imprime,
+#contenu .nonimprime {
+    padding-left: 18px;
+}
+
+#contenu .imprime {
+    background: url('/static/img/icons/flag-green.png') no-repeat left center rgba(0, 255, 0, 0.2);
+}
+#contenu .nonimprime {
+    background: url('/static/img/icons/flag-red.png') no-repeat left center rgba(255, 0, 0, 0.2);
+}
+
+#contenu .jauge {
+    background: url('/static/img/icons/flag-green.png') no-repeat left center rgba(0, 255, 0, 0.2);
+}
+
+#contenu .jauge_presquepleine {
+    background: url('/static/img/icons/flag-orange.png') no-repeat left center rgba(255, 255, 0, 0.2);
+}
+#contenu .jauge_pleine {
+    background: url('/static/img/icons/flag-red.png') no-repeat left center rgba(255, 0, 0, 0.2);
+}
+#contenu .jauge_troppleine {
+    background: url('/static/img/icons/flag-purple.png') no-repeat left center rgba(150, 0, 255, 0.2);
+}
