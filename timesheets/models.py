@@ -9,8 +9,11 @@ import math
 class Employee(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE)
-    color = models.CharField(max_length=7, default="#ffffff")
+        on_delete=models.CASCADE,
+        help_text="User binded to this employee")
+    color = models.CharField(
+        max_length=25, default="#af0000",
+        help_text="Color in CSS format (hexadecimal or rgb format)")
 
     def __str__(self):
         return '{}'.format(self.user.username)
@@ -48,14 +51,6 @@ class TimeRecord(models.Model):
         return '{!s} - {} - {!s}'.format(self.project, self.date, self.employee)
 
 
-class Project(models.Model):
-    initials = models.CharField(unique=True, max_length=5)
-    name = models.CharField(max_length=30)
-
-    def __str__(self):
-        return '{} - {}'.format(self.initials, self.name)
-
-
 class SubProjectManager(models.Manager):
     pass
 
@@ -78,9 +73,28 @@ class SubProject(models.Model):
         return TimeRecord.objects.filter(project=self)
 
     def total_hours(self):
-        return self.timerecords.aggregate(models.Sum('hours'))
+        return self.timerecords.aggregate(models.Sum('hours'))['hours__sum']
 
     def __str__(self):
         if self.parent_project:
             return '{0.parent_project.initials}-{0.initials} - {0.name}'.format(self)
+        return '{} - {}'.format(self.initials, self.name)
+
+
+class Project(models.Model):
+    initials = models.CharField(unique=True, max_length=5)
+    name = models.CharField(max_length=30)
+
+    @property
+    def subprojects(self):
+        return SubProject.objects.filter(parent_project=self)
+
+    @property
+    def timerecords(self):
+        return TimeRecord.objects.filter(project=self.subprojects)
+
+    def total_hours(self):
+        return self.timerecords.aggregate(models.Sum('hours'))['hours__sum']
+
+    def __str__(self):
         return '{} - {}'.format(self.initials, self.name)
