@@ -16,6 +16,5 @@ urlpatterns = patterns(
 
     url(r'^timesheets/', include(timesheets.urls, namespace='timesheets')),
 
-    url(r'^login$', login),
-    url(r'^logout$', logout, name='logout'),
+    url('^', include('django.contrib.auth.urls'))
 )
