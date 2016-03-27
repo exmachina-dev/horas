@@ -2,22 +2,25 @@ body {
     background: url('/static/img/bg3.jpg') fixed center no-repeat #fff;
     background-size: cover;
     width: 90%;
-    margin: auto;
+    margin: 0px auto;
+    padding: 0px;
 }
 
 #header {
-    background: url('/static/img/header.png') repeat-x bottom transparent;
+    background-image: url('/static/img/header.png'), url('/static/img/horas.png');
+    background-repeat: repeat-x, no-repeat;
+    background-position: bottom, 2% 10%;
     background-color: rgba(255, 255, 255, 0.05);
     box-sizing: content-box;
     height: 101px;
     margin: 0px auto;
     padding: 0px 30px;
-    padding-top: 24px;
-    text-align: center
+    padding-top: 0px;
+    text-align: center;
 }
 #header p#session {
     display: inline-block;
-    padding: 3px 6px;
+    padding: 6px 10px;
     margin: auto;
     font-family: monospace;
     font-size: 0.85em;
@@ -42,14 +45,11 @@ body {
 ul#menu {
     background: url('/static/img/menu.png') repeat-x bottom transparent;
     margin: 0px;
-    margin-left: 18px;
     float: left;
-    width: 116px;
+    width: 12em;
     height: auto;
-    padding: 20px;
-    padding-top: 15px;
+    padding: 1em;
     list-style-type: none;
-    text-align: right;
     font-family: monospace;
 }
 
@@ -90,11 +90,12 @@ form#search input:last-child {
 
 ul#menu a, ul#menu a:hover {
     display: block;
-    padding: 2px 4px;
+    padding: 0.25em 0.5em;
     color: rgba(0, 0, 0, 0.6);
     text-decoration: none;
     font-family: monospace;
-    background-color: rgba(0, 0, 0, 0.03);
+    font-size: 1.1em;
+    background-color: rgba(255, 255, 255, 0.3);
     border: 1px solid rgba(0, 0, 0, 0.12);
     border-top: 0px;
 }
@@ -117,8 +118,8 @@ ul#menu input:first-child:focus, ul#menu input:first-child:hover {
 ul#menu .separator {
     background: url('/static/img/menu.png') repeat-x bottom transparent;
     height: 1px;
-    width: 30%;
-    margin: 4px auto;
+    width: 3em;
+    margin: 0.25em auto;
 }
 
 ul#menu > li.separator + li >a {
@@ -134,7 +135,7 @@ ul#menu > li:first-child > a, ul#menu > li.separator + li >a {
 
 ul#menu > li:first-child > a,
 ul#menu > li:last-child > a,
-ul#menu > li:nth-child(7) >a,
+ul#menu > li:nth-child(5) >a,
 ul#menu > li:nth-child(9) >a {
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -143,16 +144,16 @@ ul#menu > li:nth-child(9) >a {
 /* Contenu */
 
 #content {
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.3);
     min-height: 550px;
     margin: 0px;
     padding: 5px;
 }
 #content > *{
     margin: 0px;
-    margin-left: 180px;
-    margin-right: 27px;
-    padding: 20px;
+    margin-left: 13em;
+    margin-right: 0.5em;
+    padding: 0.5em;
     font-family: monospace;
 }
 
@@ -170,11 +171,10 @@ ul#menu > li:nth-child(9) >a {
 #footer {
     background: url('/static/img/footer.png') repeat-x transparent;
     background-color: rgba(0, 0, 0, 0.1);
-    min-height: 25px;
+    min-height: 10em;
     margin: 0px;
-    margin-bottom: 20px;
     padding: 0px 30px;
-    padding-top: 10px;
+    padding-top: 20px;
     clear: both;
     text-align: right;
     color: #fff;
@@ -185,16 +185,25 @@ ul#menu > li:nth-child(9) >a {
 /* Tables */
 
 #content table {
-    border: 1px solid rgba(0, 0, 0, 0.3);
     border-collapse: collapse;
     empty-cells: hide;
     width: auto;
     font-family: monospace;
     display: block;
     padding: 10px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.3);
     overflow-x: scroll;
-    overflow-y: show;
+}
+#content table.project_table {
+    float: left;
+    margin-left: 20px;
+    margin-right: 0px;
+    padding-right: 0px;
+    overflow-x: auto;
+}
+#content table.timesheet_table {
+    margin-left: 0px;
+    padding-left: 0px;
 }
 
 #content table tr {
@@ -210,18 +219,29 @@ ul#menu > li:nth-child(9) >a {
     font-size: 0.9em;
     padding: 2px 5px;
     background: rgba(50, 175, 255, 0.08);
+    height: 1.25em;
 }
 #content table td {
     empty-cells: hide;
-    border: 1px solid #aaa;
+    border: 1px solid rgba(0, 0, 0, 0.5);
     padding: 2px 5px;
+    height: 1.25em;
+}
+
+#content table td.project_hours_cell, #content table td.subproject_hours_cell {
+    font-style: italic;
+    text-align: center;
+}
+#content table td.subproject_hours_cell {
+    text-align: right;
+    font-weight: bold;
 }
 
 #content table td.project_cell {
     min-width: 20em;
 }
 #content table td.subproject_cell {
-    border-left: 0px;
+    padding-left: 2em;
 }
 #content table td.employee_hour_tag, #content table td.empty_hour_tag {
     display: table-cell;
@@ -244,6 +264,10 @@ td.employee_hour_tag:hover span.bubble {
     position: absolute;
     bottom: -1.3em;
     right: -1em;
+}
+#content table td.empty_hour_tag {
+    border-left: none;
+    border-right: none;
 }
 
 
@@ -294,12 +318,16 @@ td.employee_hour_tag:hover span.bubble {
     border-radius: 2px;
 }
 
+#content ul.employee_legend p {
+    display: inline-block;
+    margin: 0;
+}
 #content ul.employee_legend li {
     display: inline-block;
-    width: 2.5em;
-    border: 1px solid rgba(0, 0, 0, 0.3);
+    width: 3em;
+    border: 1px solid rgba(0, 0, 0, 0.5);
     color: #eee;
-    padding: 2px 10px;
+    padding: 5px 10px;
     text-align: center;
     box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.2) inset;
     text-shadow: 1px 1px 2px rgba(0,0,0, 0.2);
