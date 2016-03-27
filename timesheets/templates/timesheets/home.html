@@ -3,8 +3,9 @@
 
 {% block content %}
 <ul class="employee_legend">
+    <p>Filter by employee:</p>
     {% for employee in employees %}
-    <li style="color: #eee; background-color: {{ employee.color }};"><a href="{% url 'timesheets:timesheet_by_employee' employee=employee.user.username %}">{{ employee.user.username }}</a></li>
+    <li style="background-color: {{ employee.color }};"><a class="ico_filter" href="{% url 'timesheets:timesheet_by_employee' employee=employee.user.username %}">{{ employee.user.username }}</a></li>
     {% endfor %}
 </ul>
 {% include "timesheets/timeline_multiple.html" %}

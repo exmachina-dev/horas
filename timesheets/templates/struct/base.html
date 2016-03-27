@@ -17,23 +17,35 @@
             {% if user.is_authenticated %}
             <p id="session">Logged as {{ user.username }} - <a href="{% url 'logout' %}">logout</a></p>
             {% endif %}
-            {% if messages %}
-            <div id="messages">
-                {% for messange in messages %}
-                <p class="{{ message.class }}">{{ message.text }}</p>
-                {% endfor %}
-            </div>
-            {% endif %}
         </div>
         <div id="content">
             <ul id="menu">
                 <li><a href="{% url 'home' %}">Home</a></li>
                 <li class="separator"></li>
-
+                <li><a href="{% url 'timesheets:home' %}">Timesheet</a></li>
+                <li><a href="{% url 'timesheets:subproject_list' %}">Subprojects</a></li>
+                <li><a href="{% url 'timesheets:project_list' %}">Projects</a></li>
                 <li class="separator"></li>
+                <li><a href="{% url 'timesheets:new_timerecord' %}">Add timerecord</a></li>
+                <li><a href="{% url 'timesheets:new_subproject' %}">New subproject</a></li>
+                <li><a href="{% url 'timesheets:new_project' %}">New project</a></li>
                 <li class="separator"></li>
+                <li><a href="">—</a></li>
+                <li><a href="">—</a></li>
+                <li><a href="">—</a></li>
+                <li><a href="">—</a></li>
+                {% if user.is_superuser %}
                 <li class="separator"></li>
+                <li><a href="/admin">Admin</a></li>
+                {% endif %}
             </ul>
+            {% if messages %}
+            <div id="messages">
+                {% for message in messages %}
+                <p class="{{ message.class }}">{{ message.text }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
             {% block content %}{% endblock %}
         </div>
         {% block footer %}
