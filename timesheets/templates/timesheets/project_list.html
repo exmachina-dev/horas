@@ -1,0 +1,21 @@
+{% extends 'struct/base.html' %}
+{% load math_filters %}
+{% block title %}Project list{% endblock %}
+
+{% block content %}
+<table>
+    <tr>
+        <th colspan="2">Project</th>
+        <th>Subrojects</th>
+        <th>Hours</th>
+    </tr>
+    {% for project in object_list %}
+    <tr>
+        <td>{{ project.initials|upper }}</td>
+        <td>{{ project.name }}</td>
+        <td>{{ project.subprojects.count }} - <a class="ico_view" href="{% url 'timesheets:subproject_list' project=project.id %}">view</a></td>
+        <td>{{ project.total_hours|fhours }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'struct/base.html' %}
+{% load math_filters %}
+{% block title %}Project list{% endblock %}
+
+{% block content %}
+{% if project %}Only showing subprojects for {{ project }}{% endif %}
+<table>
+    <tr>
+        <th>Project</th>
+        <th colspan="2">Subproject</th>
+        <th>Hours</th>
+    </tr>
+    {% for subproject in object_list %}
+    <tr>
+        <td>{{ subproject.parent_project }}</td>
+        <td>{{ subproject.initials|upper }}</td>
+        <td>{{ subproject.name }}</td>
+        <td>{{ subproject.total_hours|fhours }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

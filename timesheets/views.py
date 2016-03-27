@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
+from django.views.generic.edit import FormView
+from django.views.generic import ListView
 
-from .models import Employee, SubProject
+from .models import Employee, SubProject, Project
+from .forms import TimeRecordForm, SubProjectForm, ProjectForm
 
 from datetime import date
 from datetime import timedelta
@@ -92,3 +95,76 @@ def timesheet(request, employee=None, from_date=date.today()-timedelta(days=7), 
         'timesheet': timesheet,
     }
     return render(request, 'timesheets/home.html', context)
+
+
+class SubProjectListView(ListView):
+    model = SubProject
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'project' in self.kwargs:
+            qs = qs.filter(parent_project=self.kwargs['project'])
+
+        return qs
+
+
+class ProjectListView(ListView):
+    model = Project
+
+
+class TimeRecordFormView(FormView):
+    template_name = 'timesheets/timerecord_edit.html'
+    form_class = TimeRecordForm
+    initial = {
+        'hours': 1.0,
+        'date': date.today(),
+    }
+    success_url = '/timesheets'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'create'
+        if 'timerecord_id' in self.kwargs:
+            context['action'] = 'modify'
+
+        return context
+
+    def get_initial(self):
+        self.initial['employee'] = self.request.user.employee
+        return self.initial
+
+
+class SubProjectFormView(FormView):
+    template_name = 'timesheets/subproject_edit.html'
+    form_class = SubProjectForm
+    success_url = 'timesheets/subproject_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'create'
+        if 'timerecord_id' in self.kwargs:
+            context['action'] = 'modify'
+
+        return context
+
+    def get_initial(self):
+        self.initial['employee'] = self.request.user.employee
+        return self.initial
+
+
+class ProjectFormView(FormView):
+    template_name = 'timesheets/project_edit.html'
+    form_class = ProjectForm
+    success_url = '/timesheets/project_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'create'
+        if 'timerecord_id' in self.kwargs:
+            context['action'] = 'modify'
+
+        return context
+
+    def get_initial(self):
+        self.initial['employee'] = self.request.user.employee
+        return self.initial
