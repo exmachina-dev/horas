@@ -1,0 +1,12 @@
+{% extends 'struct/base.html' %}
+{% block title %}{{ action|title }} timerecord{% endblock %}
+
+{% block content %}
+<div id="timesheet_form">
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="{{ action|title }}" />
+    </form>
+</div>
+{% endblock %}

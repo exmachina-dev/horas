@@ -1,0 +1,10 @@
+{% extends 'struct/base.html' %}
+{% block title %}Confirm deletion of {{ object }}{% endblock %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Delete" />
+</form>
+{{ block.super }}
+{% endblock %}
