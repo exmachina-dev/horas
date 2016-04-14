@@ -6,11 +6,10 @@
         <title>{% block title %}No title{% endblock %} - Horas</title>
         <link rel="stylesheet" href="{% static "css/base.css" %}" type="text/css" />
         <link rel="stylesheet" href="{% static "css/icons.css" %}" type="text/css" />
-        <script src="http://code.jquery.com/jquery-latest.js"></script>
-        {% if form %}<link rel="stylesheet" href="{{ STATIC_URL }}css/forms.css" type="text/css" />{% endif %}
-        {% if table %}<link rel="stylesheet" href="{{ STATIC_URL }}css/tables.css" type="text/css" />{% endif %}
-        {% if detail %}<link rel="stylesheet" href="{{ STATIC_URL }}css/details.css" type="text/css" />{% endif %}
-        {% if plan %}<link rel="stylesheet" href="{{ STATIC_URL }}css/plan.css" type="text/css" />{% endif %}
+        {% if form %}<link rel="stylesheet" href="{% static "css/forms.css" %}" type="text/css" />{% endif %}
+        {% if table %}<link rel="stylesheet" href="{% static "css/tables.css" %}" type="text/css" />{% endif %}
+        {% if detail %}<link rel="stylesheet" href="{% static "css/details.css" %}" type="text/css" />{% endif %}
+        {% if plan %}<link rel="stylesheet" href="{% static "css/plan.css" %}" type="text/css" />{% endif %}
     </head>
     <body>
         <div id="header">
