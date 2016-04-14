@@ -1,4 +1,9 @@
+{% extends 'struct/base.html' %}
 {% load math_filters %}
+
+{% block title %}Timesheet{% endblock %}
+
+{% block content %}
 <table class="project_table">
     <tr>
         <th>&nbsp;</th>
@@ -26,47 +31,116 @@
 </table>
 
 <table class="timesheet_table">
-<tr>
-    {% for day in days %}
-    <th colspan="{{ employees|length }}">{{ day|date:"W" }}</th>
-    {% endfor %}
-</tr>
-<tr>
-    {% for day in days %}
-    <th colspan="{{ employees|length }}">{{ day|date:"D j" }}</th>
-    {% endfor %}
-</tr>
-{% for record in timesheet %}
-{% ifchanged record.parent_project %}
-<tr>
-    {% for day in days %}
-    <td class="project_hours_cell" colspan="{{ employees|length }}">&nbsp;{{ record.project.parent_project.total_hours|fhours }}</td>
-    {% endfor %}
-</tr>
-{% endifchanged %}
-<tr class="{% cycle "" "alt" %}">
-    {% for day in record.timesheet %}
+    <tr>
+        {% for day in days %}
+        <th colspan="{{ employees|length }}">{{ day|date:"W" }}</th>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for day in days %}
+        <th colspan="{{ employees|length }}">{{ day|date:"D j" }}</th>
+        {% endfor %}
+    </tr>
+    {% for record in timesheet %}
+    {% ifchanged record.parent_project %}
+    <tr>
+        {% for day in days %}
+        <td class="project_hours_cell" colspan="{{ employees|length }}">&nbsp;{{ record.project.parent_project.total_hours|fhours }}</td>
+        {% endfor %}
+    </tr>
+    {% endifchanged %}
+    <tr class="{% cycle "" "alt" %}">
+        {% for day in record.timesheet %}
         {% for line in day.timerecords %}
         <td class="employee_hour_tag" style="color: #eee; background-color: {{ line.employee.color }};">
             {{ line.hours|fhours }}
-            <span class="bubble">{{ line.employee.user.username }}</span>
+            <span class="bubble">{{ line.employee.user.username }}
+                <a class="but_edit" href="{% url 'timesheets:edit_timerecord' pk=line.id %}">Edit</a>
+                <a class="but_delete inline_delete" href="{% url 'timesheets:delete_timerecord' pk=line.id %}">Edit</a>
+            </span>
         </td>
         {% if forloop.last and forloop.counter < employees|length %}
-        {% for e in employees %}
-        {% if forloop.parentloop.counter|add:forloop.counter <= employees|length %}<td class="empty_hour_tag">&nbsp;</td>{% endif %}
+                                      {% for e in employees %}
+                                      {% if forloop.parentloop.counter|add:forloop.counter <= employees|length %}<td class="empty_hour_tag">&nbsp;</td>{% endif %}
+                                      {% endfor %}
+                                      {% endif %}
+                                      {% empty %}
+                                      {% for e in employees %}
+                                      <td class="empty_hour_tag">&nbsp;</td>
+                                      {% endfor %}
+                                      {% endfor %}
+                                      {% endfor %}
+    </tr>
+    <tr class="{% cycle "" "alt" %}">
+        {% for day in record.timesheet %}
+        <td class="subproject_hours_cell" colspan="{{ employees|length }}">{{ day.total_hours|fhours }}</td>
         {% endfor %}
-        {% endif %}
-        {% empty %}
-        {% for e in employees %}
-        <td class="empty_hour_tag">&nbsp;</td>
-        {% endfor %}
-        {% endfor %}
+    </tr>
     {% endfor %}
-</tr>
-<tr class="{% cycle "" "alt" %}">
-    {% for day in record.timesheet %}
-    <td class="subproject_hours_cell" colspan="{{ employees|length }}">{{ day.total_hours|fhours }}</td>
-    {% endfor %}
-</tr>
-{% endfor %}
 </table>
+{% endblock %}
+
+{% block javascript_end %}
+{{ block.super }}
+<script src="{{ STATIC_URL  }}js/jquery.confirm.js"></script>
+<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+$(document).ready(function() {
+
+    var csrftoken = getCookie('csrftoken');
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        crossDomain: false, // obviates need for sameOrigin test
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $(".inline_delete").confirm({
+        text: "This is very dangerous, you shouldn't do it! Are you very sure?",
+        confirm: function(button) {
+            $.post(this.href, function(data) {
+                if (data.result == "ok"){
+                    location.reload();
+                } else {
+                    // handle error processed by server here
+                    alert("smth goes wrong");
+                }
+            }).fail(function() {
+                // handle unexpected error here
+                alert("error");
+            });
+            return false;
+    },
+    cancel: function(button) {
+        alert("You cancelled.");
+    },
+    confirmButton: "Yes I am",
+    cancelButton: "Nope, abort abort!",
+    confirmButtonClass: "btn-danger",
+    cancelButtonClass: "btn-info"
+});
+});
+</script>
+{% endblock %}

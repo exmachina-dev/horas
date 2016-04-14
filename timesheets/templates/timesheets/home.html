@@ -1,4 +1,4 @@
-{% extends 'struct/base.html' %}
+{% extends 'timesheets/timeline_multiple.html' %}
 {% block title %}Home{% endblock %}
 
 {% block content %}
@@ -8,5 +8,5 @@
     <li style="background-color: {{ employee.color }};"><a class="ico_filter" href="{% url 'timesheets:timesheet_by_employee' employee=employee.user.username %}">{{ employee.user.username }}</a></li>
     {% endfor %}
 </ul>
-{% include "timesheets/timeline_multiple.html" %}
+{{ block.super }}
 {% endblock %}
