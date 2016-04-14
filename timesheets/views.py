@@ -1,68 +1,28 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.http import HttpResponse
+import json
 from django.db.models import Sum
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView, DeleteView
 from django.views.generic import ListView
 
-from .models import Employee, SubProject, Project
+from .models import TimeRecord, Employee, SubProject, Project
 from .forms import TimeRecordForm, SubProjectForm, ProjectForm
 
 from datetime import date
 from datetime import timedelta
 
 
-@login_required
-def home(request, from_date=date.today()-timedelta(days=13), to_date=date.today()):
-    employees = Employee.objects.all()
-    subprojects = SubProject.objects.exclude(finished=True)
-    date_span = (to_date - from_date).days + 1
-    day_range = [to_date - timedelta(days=x) for x in range(0, date_span)]
-    day_range.reverse()
-
-    timesheet = []
-
-    for subproject in subprojects:
-        project_qs = subproject.timerecords.filter(date__range=(from_date, to_date), employee__in=employees).order_by('date')
-        cur_date = from_date
-        project_ts = []
-        while cur_date <= to_date:
-            date_qs = project_qs.filter(date=cur_date).order_by('employee')
-            project_ts.append({
-                'date': cur_date,
-                'timerecords': date_qs,
-                'total_hours': date_qs.aggregate(Sum('hours'))['hours__sum'] or 0,
-            })
-            cur_date = cur_date + timedelta(days=1)
-        timesheet.append({
-            'project': subproject,
-            'timesheet': project_ts,
-            'parent_project': subproject.parent_project,
-        })
-
-    context = {
-        'employees': employees.order_by('user__username'),
-        'subprojects': subprojects,
-        'days': day_range,
-        'timesheet': timesheet,
-    }
-    return render(request, 'timesheets/home.html', context)
-
-
-@login_required
-def employees_list(request):
-    employees = Employee.objects
-    context = {
-        'employees': employees,
-    }
-    return render(request, 'timesheets/employees.html', context)
-
-
-@login_required
-def timesheet(request, employee=None, from_date=date.today()-timedelta(days=7), to_date=date.today()):
-    if not employee:
-        employees = Employee.objects.all()
+def get_timesheet(**kwargs):
+    if 'employee' in kwargs:
+        employees = Employee.objects.filter(user__username__exact=kwargs['employee'])
     else:
-        employees = Employee.objects.filter(user__username__exact=employee)
+        employees = Employee.objects.all()
+
+    to_date = kwargs.get('to_date', date.today())
+    from_date = kwargs.get('from_date', date.today() - timedelta(days=7))
+
     subprojects = SubProject.objects.all()
     date_span = (to_date - from_date).days
     day_range = [to_date - timedelta(days=x) for x in range(0, date_span)]
@@ -94,7 +54,33 @@ def timesheet(request, employee=None, from_date=date.today()-timedelta(days=7), 
         'days': day_range,
         'timesheet': timesheet,
     }
+    return context
+
+
+@login_required
+def home(request, from_date=date.today()-timedelta(days=7), to_date=date.today()):
+    context = get_timesheet(from_date=from_date, to_date=to_date)
     return render(request, 'timesheets/home.html', context)
+
+
+@login_required
+def employees_list(request):
+    employees = Employee.objects
+    context = {
+        'employees': employees,
+    }
+    return render(request, 'timesheets/employees.html', context)
+
+
+class TimeSheetView(ListView):
+    model = TimeRecord
+    template_name = "timesheets/home.html"
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context.update(get_timesheet(**self.kwargs))
+
+        return context
 
 
 class SubProjectListView(ListView):
@@ -112,7 +98,7 @@ class ProjectListView(ListView):
     model = Project
 
 
-class TimeRecordFormView(FormView):
+class TimeRecordNewView(FormView):
     template_name = 'timesheets/timerecord_edit.html'
     form_class = TimeRecordForm
     initial = {
@@ -124,14 +110,25 @@ class TimeRecordFormView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['action'] = 'create'
-        if 'timerecord_id' in self.kwargs:
-            context['action'] = 'modify'
 
         return context
 
     def get_initial(self):
         self.initial['employee'] = self.request.user.employee
         return self.initial
+
+
+class TimeRecordEditView(UpdateView):
+    template_name = 'timesheets/timerecord_edit.html'
+    model = TimeRecord
+    form_class = TimeRecordForm
+    success_url = '/timesheets'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'modify'
+
+        return context
 
 
 class SubProjectFormView(FormView):
@@ -168,3 +165,19 @@ class ProjectFormView(FormView):
     def get_initial(self):
         self.initial['employee'] = self.request.user.employee
         return self.initial
+
+
+class TimeRecordDeleteView(DeleteView):
+    model = TimeRecord
+    success_url = '/timesheets/'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+
+        response = super().dispatch(*args, **kwargs)
+        if self.request.is_ajax():
+            response_data = {"result": "ok"}
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        else:
+            return response
