@@ -40,6 +40,7 @@ INSTALLED_APPS = (
 )
 
 AUTH_PROFILE_MODULE = 'timesheets.employee'
+LOGIN_URL = 'login'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
