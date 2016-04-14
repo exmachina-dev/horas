@@ -61,6 +61,7 @@ class SubProjectManager(models.Manager):
 class SubProject(models.Model):
     initials = models.CharField(max_length=5)
     name = models.CharField(max_length=30)
+    analytic_code = models.CharField(max_length=30, blank=True)
     parent_project = models.ForeignKey('Project', blank=True, null=True)
     finished = models.BooleanField(default=False)
     objects = SubProjectManager()
