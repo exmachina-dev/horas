@@ -116,7 +116,7 @@ class SubProjectListView(ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        if 'project' in self.kwargs:
+        if 'project' in self.kwargs and self.kwargs['project'] is not None:
             qs = qs.filter(parent_project=self.kwargs['project'])
 
         return qs
