@@ -151,7 +151,7 @@ $(document).ready(function() {
     });
 
     $(".inline_delete").confirm({
-        text: "This is very dangerous, you shouldn't do it! Are you very sure?",
+        text: "Are you sure?",
         confirm: function(button) {
             $.post(this.href, function(data) {
                 if (data.result == "ok"){
@@ -167,10 +167,10 @@ $(document).ready(function() {
             return false;
     },
     cancel: function(button) {
-        alert("You cancelled.");
+        return false;
     },
     confirmButton: "Yes I am",
-    cancelButton: "Nope, abort abort!",
+    cancelButton: "Cancel",
     confirmButtonClass: "btn-danger",
     cancelButtonClass: "btn-info"
 });
