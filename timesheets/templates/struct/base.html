@@ -1,15 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 {% load staticfiles %}
-<html lang="fr">
+<html lang="en">
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}No title{% endblock %} - Horas</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
         <link rel="stylesheet" href="{% static "css/base.css" %}" type="text/css" />
         <link rel="stylesheet" href="{% static "css/icons.css" %}" type="text/css" />
-        {% if form %}<link rel="stylesheet" href="{% static "css/forms.css" %}" type="text/css" />{% endif %}
-        {% if table %}<link rel="stylesheet" href="{% static "css/tables.css" %}" type="text/css" />{% endif %}
-        {% if detail %}<link rel="stylesheet" href="{% static "css/details.css" %}" type="text/css" />{% endif %}
-        {% if plan %}<link rel="stylesheet" href="{% static "css/plan.css" %}" type="text/css" />{% endif %}
     </head>
     <body>
         <div id="header">
@@ -52,6 +50,7 @@
         {% endblock %}
         {% block javascript_end %}
         <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         {% endblock %}
     </body>
 </html>

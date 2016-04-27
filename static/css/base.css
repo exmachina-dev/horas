@@ -46,7 +46,7 @@ ul#menu {
     background: url('/static/img/menu.png') repeat-x bottom transparent;
     margin: 0px;
     float: left;
-    width: 12em;
+    width: 14em;
     height: auto;
     padding: 1em;
     list-style-type: none;
@@ -181,10 +181,13 @@ form p {
 }
 #content > * {
     margin: 0px;
-    margin-left: 13em;
+    margin-left: 14.5em;
     margin-right: 0.5em;
     padding: 0.5em;
     font-family: monospace;
+    display: block;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.3);
 }
 
 #content a, #content a:hover {
@@ -218,15 +221,11 @@ form p {
     border-collapse: collapse;
     empty-cells: hide;
     width: auto;
-    font-family: monospace;
-    display: block;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.3);
     overflow-x: scroll;
 }
 #content table.project_table {
     float: left;
-    margin-left: 20px;
+    margin-left: 0.5em;
     margin-right: 0px;
     padding-right: 0px;
     overflow-x: auto;
@@ -238,11 +237,17 @@ form p {
 
 #content table tr {
     width: auto;
-    background: rgba(0, 127, 255, 0.02);
+    background: rgba(127, 127, 255, 0.05);
+}
+#content table tr:hover {
+    background: rgba(127, 127, 255, 0.15);
 }
 
 #content table td.alt, #content table tr.alt {
-    background: rgba(0, 127, 255, 0.1);
+    background: rgba(127, 127, 255, 0.1);
+}
+#content table tr.alt:hover {
+    background: rgba(127, 127, 255, 0.2);
 }
 #content table tr th {
     font-weight: bold;
@@ -275,7 +280,7 @@ form p {
 }
 #content table td.employee_hour_tag, #content table td.empty_hour_tag {
     display: table-cell;
-    min-width: 2.5em;
+    min-width: 4em;
 }
 span.bubble {
     display: none;
@@ -283,7 +288,7 @@ span.bubble {
     background: rgba(0, 0, 0, 0.4);
     color: #eee;
     padding: 2px 0px;
-    width: 10em;
+    width: 6em;
     z-index: 1000;
 }
 td.employee_hour_tag {
@@ -294,7 +299,7 @@ td.employee_hour_tag:hover span.bubble {
     opacity: 1;
     position: absolute;
     bottom: -1.3em;
-    right: -6em;
+    right: -3em;
 }
 #content table td.empty_hour_tag {
     border-left: none;
@@ -355,7 +360,7 @@ td.employee_hour_tag:hover span.bubble {
 }
 #content ul.employee_legend li {
     display: inline-block;
-    width: 3em;
+    width: 5em;
     border: 1px solid rgba(0, 0, 0, 0.5);
     color: #eee;
     padding: 5px 10px;
