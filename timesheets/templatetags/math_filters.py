@@ -25,7 +25,7 @@ def fhours(value):
         return '{:d}h{:02d}'.format(h, m)
     except (ValueError, TypeError):
         try:
-            return value
+            return '-'
         except Exception:
             return ''
 
