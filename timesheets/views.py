@@ -85,10 +85,29 @@ def get_timesheet(**kwargs):
     return context
 
 
-@login_required
-def home(request, from_date=date.today()-timedelta(days=7), to_date=date.today()):
-    context = get_timesheet(from_date=from_date, to_date=to_date)
-    return render(request, 'timesheets/home.html', context)
+class HomeView(LoginRequiredMixin, FormView):
+    template_name = 'timesheets/home.html'
+    form_class = TimeRecordForm
+    initial = {
+        'hours': 1.0,
+        'date': date.today(),
+    }
+
+    model = TimeRecord
+    form_class = TimeRecordForm
+    success_url = '/timesheets'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        from_date = self.kwargs.get('form_date', date.today()-timedelta(days=7))
+        to_date = self.kwargs.get('to_date', date.today())
+        context.update(get_timesheet(from_date=from_date, to_date=to_date))
+
+        return context
+
+    def get_initial(self):
+        self.initial['employee'] = self.request.user.employee
+        return self.initial
 
 
 @login_required

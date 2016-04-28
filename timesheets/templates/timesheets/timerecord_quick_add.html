@@ -1,0 +1,12 @@
+<div id="timerecord_quick_add">
+    <form action="" method="post">
+        {% csrf_token %}
+        <ul>
+            <li>{{ form.employee }}</li>
+            <li>{{ form.date }}</li>
+            <li>{{ form.project }}</li>
+            <li>{{ form.hours }}</li>
+            <li><input type="submit" value="Create" /></li>
+        </ul>
+    </form>
+</div>
