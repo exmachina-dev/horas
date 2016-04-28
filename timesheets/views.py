@@ -1,10 +1,9 @@
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+# from django.contrib.auth.mixins import LoginRequiredMixin # New in Django 1.9
 from django.http import HttpResponse
 import json
 from django.db.models import Sum
-from django.views.generic.edit import FormView, UpdateView, DeleteView
+from django.views.generic.edit import FormView, DeleteView
 from django.views.generic import ListView
 
 from .models import TimeRecord, Employee, SubProject, Project
@@ -12,6 +11,17 @@ from .forms import TimeRecordForm, SubProjectForm, ProjectForm
 
 from datetime import date
 from datetime import timedelta
+
+
+class LoginRequiredMixin(object):
+    """
+    Replacement of LoginRequiredMixin found in django.contribxauth.mixins
+    for Django »= 1.9
+    """
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super().as_view(**initkwargs)
+        return login_required(view)
 
 
 def get_timesheet(**kwargs):
@@ -110,16 +120,12 @@ class HomeView(LoginRequiredMixin, FormView):
         return self.initial
 
 
-@login_required
-def employees_list(request):
-    employees = Employee.objects
-    context = {
-        'employees': employees,
-    }
-    return render(request, 'timesheets/employees.html', context)
+class EmployeeListView(LoginRequiredMixin, ListView):
+    model = Employee
+    template_name = 'timesheets/employees.html'
 
 
-class TimeSheetView(ListView):
+class TimeSheetView(LoginRequiredMixin, ListView):
     model = TimeRecord
     template_name = "timesheets/home.html"
 
@@ -130,7 +136,7 @@ class TimeSheetView(ListView):
         return context
 
 
-class SubProjectListView(ListView):
+class SubProjectListView(LoginRequiredMixin, ListView):
     model = SubProject
 
     def get_queryset(self):
@@ -141,11 +147,11 @@ class SubProjectListView(ListView):
         return qs
 
 
-class ProjectListView(ListView):
+class ProjectListView(LoginRequiredMixin, ListView):
     model = Project
 
 
-class TimeRecordNewView(FormView):
+class TimeRecordNewView(LoginRequiredMixin, FormView):
     template_name = 'timesheets/timerecord_edit.html'
     form_class = TimeRecordForm
     initial = {
@@ -165,7 +171,7 @@ class TimeRecordNewView(FormView):
         return self.initial
 
 
-class TimeRecordEditView(UpdateView):
+class TimeRecordEditView(LoginRequiredMixin, FormView):
     template_name = 'timesheets/timerecord_edit.html'
     model = TimeRecord
     form_class = TimeRecordForm
@@ -178,7 +184,7 @@ class TimeRecordEditView(UpdateView):
         return context
 
 
-class SubProjectFormView(FormView):
+class SubProjectFormView(LoginRequiredMixin, FormView):
     template_name = 'timesheets/subproject_edit.html'
     form_class = SubProjectForm
     success_url = 'timesheets/subproject_list.html'
@@ -196,7 +202,7 @@ class SubProjectFormView(FormView):
         return self.initial
 
 
-class ProjectFormView(FormView):
+class ProjectFormView(LoginRequiredMixin, FormView):
     template_name = 'timesheets/project_edit.html'
     form_class = ProjectForm
     success_url = '/timesheets/project_list.html'
@@ -214,11 +220,10 @@ class ProjectFormView(FormView):
         return self.initial
 
 
-class TimeRecordDeleteView(DeleteView):
+class TimeRecordDeleteView(LoginRequiredMixin, DeleteView):
     model = TimeRecord
     success_url = '/timesheets/'
 
-    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
 
         response = super().dispatch(*args, **kwargs)
