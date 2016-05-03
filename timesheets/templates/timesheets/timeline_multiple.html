@@ -20,16 +20,28 @@
         {% for record in timesheet %}
         {% ifchanged record.project %}
         <tr>
-            <td class="project_cell">{{ record.project.initials|upper}} - {{ record.project.name }}</td>
-            <td class="hours_project_cell">{{ record.project.total_hours|fhours }}</td>
+            <td class="project_cell">
+                {{ record.project.initials|upper}} - {{ record.project.name }}
+                <span class="bubble">
+                    {% if perms.timesheets.change_project %}<a href="{% url 'timesheets:project_edit' pk=record.project.id %}" class="ico_edit">Edit</a>{% endif %}
+                    {% if perms.timesheets.delete_project %}<a href="{% url 'timesheets:project_delete' pk=record.project.id %}" class="ico_delete inline_delete">Delete</a>{% endif %}
+                </span>
+            </td>
+            <td class="hours_project_cell">{{ record.total_hours_by_project|fhours }}</td>
         </tr>
         {% endifchanged %}
         <tr class="{% cycle "" "alt" %}">
-            <td class="subproject_cell" rowspan="2">{{ record.subproject.initials|upper}} - {{ record.subproject.name }}</td>
+            <td class="subproject_cell" rowspan="2">
+                {{ record.subproject.initials|upper}} - {{ record.subproject.name }}
+                <span class="bubble">
+                    {% if perms.timesheets.change_subproject %}<a href="{% url 'timesheets:subproject_edit' pk=record.subproject.id %}" class="ico_edit">Edit</a>{% endif %}
+                    {% if perms.timesheets.delete_subproject %}<a href="{% url 'timesheets:subproject_delete' pk=record.subproject.id %}" class="ico_delete inline_delete">Delete</a>{% endif %}
+                </span>
+                </td>
             <td>&nbsp;</td>
         </tr>
         <tr class="{% cycle "" "alt" %}">
-            <td class="hours_subproject_cell">{{ record.subproject.total_hours|fhours }}</td>
+            <td class="hours_subproject_cell">{{ record.total_hours_by_subproject|fhours }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -59,7 +71,7 @@
         {% ifchanged record.project %}
         <tr>
             {% for day in days %}
-            <td class="project_hours_cell" colspan="{{ employees|length }}">&nbsp;{{ record.subproject.project.total_hours|fhours }}</td>
+            <td class="project_hours_cell" colspan="{{ employees|length }}">&nbsp;{{ record.total_hours_by_subproject|fhours }}</td>
             {% endfor %}
         </tr>
         {% endifchanged %}
@@ -69,8 +81,8 @@
                 <td class="employee_hour_tag" style="color: #eee; background-color: {{ line.employee.color }};">
                     {{ line.hours|fhours }}
                     <span class="bubble">{{ line.employee.user.username }}
-                        <a class="but_edit" href="{% url 'timesheets:edit_timerecord' pk=line.id %}">Edit</a>
-                        <a class="but_delete inline_delete" href="{% url 'timesheets:delete_timerecord' pk=line.id %}">Edit</a>
+                        <a class="but_edit" href="{% url 'timesheets:timerecord_edit' pk=line.id %}">Edit</a>
+                        <a class="but_delete inline_delete" href="{% url 'timesheets:timerecord_delete' pk=line.id %}">Delete</a>
                     </span>
                 </td>
                 {% if forloop.last and forloop.counter < employees|length %}
