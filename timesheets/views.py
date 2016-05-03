@@ -90,7 +90,7 @@ def get_timesheet(**kwargs):
     return context
 
 
-class HomeView(LoginRequiredMixin, FormView):
+class HomeView(LoginRequiredMixin, CreateView):
     template_name = 'timesheets/home.html'
     form_class = TimeRecordForm
     initial = {
