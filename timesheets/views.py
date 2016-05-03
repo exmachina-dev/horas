@@ -43,11 +43,12 @@ def get_timesheet(**kwargs):
             subproject_ts.append({
                 'date': cur_date,
                 'timerecords': date_qs,
-                'total_hours': date_qs.aggregate(Sum('hours'))['hours__sum'] or 0,
+                'total_hours': date_qs.aggregate(Sum('hours'))['hours__sum'] or None,
             })
             cur_date = cur_date + timedelta(days=1)
         timesheet.append({
             'subproject': subproject,
+            'total_hours_by_subproject': subproject_qs.aggregate(Sum('hours'))['hours__sum'] or None,
             'timesheet': subproject_ts,
             'project': subproject.parent_project,
         })
@@ -81,7 +82,7 @@ def get_timesheet(**kwargs):
         'days': day_range,
         'timesheet': timesheet,
         'total_hours': totalhours_ts,
-        'total': TimeRecord.objects.filter(date__range=(from_date, to_date)).aggregate(Sum('hours'))['hours__sum'] or 0,
+        'total': TimeRecord.objects.filter(date__range=(from_date, to_date), employee__in=employees).aggregate(Sum('hours'))['hours__sum'] or 0,
         'start_date': from_date,
         'end_date': to_date,
     }
