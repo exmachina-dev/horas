@@ -9,6 +9,7 @@
         <th>Project</th>
         <th colspan="2">Subproject</th>
         <th>Hours</th>
+        <th></th>
     </tr>
     {% for subproject in object_list %}
     <tr>
@@ -16,6 +17,7 @@
         <td>{{ subproject.initials|upper }}</td>
         <td>{{ subproject.name }}</td>
         <td>{{ subproject.total_hours|fhours }}</td>
+        <td><a class="ico_edit" href="{% url 'timesheets:subproject_edit' pk=subproject.id %}">edit</a><a class="ico_delete inline_delete" href="{% url 'timesheets:subproject_delete' pk=subproject.id %}">delete</a></td>
     </tr>
     {% endfor %}
 </table>
