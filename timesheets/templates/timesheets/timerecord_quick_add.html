@@ -1,12 +1,15 @@
+<!-- vim: ft=htmldjango
+-->
 <div id="timerecord_quick_add">
     <form action="" method="post">
         {% csrf_token %}
         <ul>
-            <li>{{ form.employee }}</li>
-            <li>{{ form.date }}</li>
-            <li>{{ form.project }}</li>
-            <li>{{ form.hours }}</li>
-            <li><input type="submit" value="Create" /></li>
+            {{ form.non_field_errors }}
+            <li>{{ form.employee }}{% for error in form.employee.errors %}<span class="error">{{ error }}</span>{% endfor %}</li>
+            <li>{{ form.date }}{% for error in form.date.errors %}<span class="error">{{ error }}</span>{% endfor %}</li>
+            <li>{{ form.project }}{% for error in form.project.errors %}<span class="error">{{ error }}</span>{% endfor %}</li>
+            <li>{{ form.hours }}{% for error in form.hours.errors %}<span class="error">{{ error }}</span>{% endfor %}</li>
+            <li><input type="submit" id="id_submit" value="Create" /></li>
         </ul>
     </form>
 </div>
