@@ -91,6 +91,7 @@ class SubProject(models.Model):
 class Project(models.Model):
     initials = models.CharField(unique=True, max_length=5)
     name = models.CharField(max_length=30)
+    analytic_code = models.CharField(max_length=30, blank=True)
 
     @property
     def subprojects(self):

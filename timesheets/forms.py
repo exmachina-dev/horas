@@ -11,10 +11,10 @@ class TimeRecordForm(ModelForm):
 class SubProjectForm(ModelForm):
     class Meta:
         model = SubProject
-        fields = ['initials', 'name', 'parent_project', 'analytic_code']
+        fields = ['initials', 'name', 'parent_project', 'analytic_code', 'finished']
 
 
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        fields = ['initials', 'name']
+        fields = ['initials', 'name', 'analytic_code']
