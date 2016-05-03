@@ -1,7 +1,5 @@
-from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.mixins import LoginRequiredMixin # New in Django 1.9
 from django.http import HttpResponse
-import json
 from django.db.models import Sum
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -12,19 +10,12 @@ from django.contrib.auth import get_user_model
 from .models import TimeRecord, Employee, SubProject, Project
 from .forms import TimeRecordForm, SubProjectForm, ProjectForm
 
+from .auth_mixins import LoginRequiredMixin, PermissionRequiredMixin
+
 from datetime import date
 from datetime import timedelta
 
-
-class LoginRequiredMixin(object):
-    """
-    Replacement of LoginRequiredMixin found in django.contribxauth.mixins
-    for Django »= 1.9
-    """
-    @classmethod
-    def as_view(cls, **initkwargs):
-        view = super().as_view(**initkwargs)
-        return login_required(view)
+import json
 
 
 def get_timesheet(**kwargs):
@@ -130,7 +121,7 @@ class HomeView(LoginRequiredMixin, FormView):
         return self.initial
 
 
-class EmployeeListView(LoginRequiredMixin, ListView):
+class EmployeeListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Employee
     template_name = 'timesheets/employees.html'
 
@@ -146,7 +137,7 @@ class TimeSheetView(LoginRequiredMixin, ListView):
         return context
 
 
-class SubProjectListView(LoginRequiredMixin, ListView):
+class SubProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = SubProject
     permission_required = 'timesheets.view_subproject_list'
 
@@ -158,11 +149,12 @@ class SubProjectListView(LoginRequiredMixin, ListView):
         return qs
 
 
-class ProjectListView(LoginRequiredMixin, ListView):
+class ProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Project
+    permission_required = 'timesheets.view_project_list'
 
 
-class TimeRecordNewView(LoginRequiredMixin, FormView):
+class TimeRecordNewView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'timesheets/timerecord_edit.html'
     form_class = TimeRecordForm
     initial = {
@@ -204,7 +196,7 @@ class TimeRecordNewView(LoginRequiredMixin, FormView):
         return super().post(request, *args, **kwargs)
 
 
-class TimeRecordEditView(LoginRequiredMixin, FormView):
+class TimeRecordEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'timesheets/timerecord_edit.html'
     model = TimeRecord
     form_class = TimeRecordForm
@@ -236,7 +228,7 @@ class TimeRecordEditView(LoginRequiredMixin, FormView):
         return super().post(request, *args, **kwargs)
 
 
-class SubProjectFormView(LoginRequiredMixin, FormView):
+class SubProjectFormView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'timesheets/subproject_edit.html'
     form_class = SubProjectForm
     model = SubProject
@@ -258,7 +250,7 @@ class SubProjectFormView(LoginRequiredMixin, FormView):
         return self.initial
 
 
-class ProjectFormView(LoginRequiredMixin, FormView):
+class ProjectFormView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'timesheets/project_edit.html'
     form_class = ProjectForm
     success_url = '/timesheets/project_list.html'
@@ -280,7 +272,7 @@ class ProjectFormView(LoginRequiredMixin, FormView):
         return self.initial
 
 
-class TimeRecordDeleteView(LoginRequiredMixin, DeleteView):
+class TimeRecordDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = TimeRecord
     template_name = 'timesheets/confirm_delete.html'
     success_url = '/timesheets/'
@@ -314,7 +306,7 @@ class TimeRecordDeleteView(LoginRequiredMixin, DeleteView):
         return super().post(request, *args, **kwargs)
 
 
-class SubProjectDeleteView(LoginRequiredMixin, DeleteView):
+class SubProjectDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = SubProject
     template_name = 'timesheets/confirm_delete.html'
     success_url = '/timesheets/'
@@ -332,7 +324,7 @@ class SubProjectDeleteView(LoginRequiredMixin, DeleteView):
             return response
 
 
-class ProjectDeleteView(LoginRequiredMixin, DeleteView):
+class ProjectDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Project
     template_name = 'timesheets/confirm_delete.html'
     success_url = '/timesheets/'
