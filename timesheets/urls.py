@@ -3,6 +3,7 @@ from django.conf.urls import patterns, url
 from .views import HomeView
 from .views import TimeSheetView, SubProjectListView, ProjectListView
 from .views import SubProjectFormView, ProjectFormView
+from .views import SubProjectDeleteView, ProjectDeleteView
 from .views import TimeRecordNewView, TimeRecordEditView, TimeRecordDeleteView
 
 urlpatterns = patterns(
@@ -14,13 +15,15 @@ urlpatterns = patterns(
     url(r'^subprojects/(?:by_project/(?P<project>\d+)/)?$', SubProjectListView.as_view(), name='subproject_list'),
     url(r'^projects$', ProjectListView.as_view(), name='project_list'),
 
-    url(r'^timerecord/new$', TimeRecordNewView.as_view(), name='new_timerecord'),
-    url(r'^timerecord/(?P<pk>\d+)/$', TimeRecordEditView.as_view(), name='edit_timerecord'),
-    url(r'^timerecord/(?P<pk>\d+)/delete$', TimeRecordDeleteView.as_view(), name='delete_timerecord'),
+    url(r'^timerecord/new$', TimeRecordNewView.as_view(), name='timerecord_new'),
+    url(r'^timerecord/(?P<pk>\d+)/$', TimeRecordEditView.as_view(), name='timerecord_edit'),
+    url(r'^timerecord/(?P<pk>\d+)/delete$', TimeRecordDeleteView.as_view(), name='timerecord_delete'),
 
-    url(r'^supbroject/new$', SubProjectFormView.as_view(), name='new_subproject'),
-    url(r'^supbroject/(?P<pk>\d+)/$', SubProjectFormView.as_view(), name='edit_subproject'),
+    url(r'^subproject/new$', SubProjectFormView.as_view(), name='subproject_new'),
+    url(r'^subproject/(?P<pk>\d+)/$', SubProjectFormView.as_view(), name='subproject_edit'),
+    url(r'^subproject/(?P<pk>\d+)/delete$', SubProjectDeleteView.as_view(), name='subproject_delete'),
 
-    url(r'^project/new$', ProjectFormView.as_view(), name='new_project'),
-    url(r'^project/(?P<pk>\d+)/$', ProjectFormView.as_view(), name='edit_project'),
+    url(r'^project/new$', ProjectFormView.as_view(), name='project_new'),
+    url(r'^project/(?P<pk>\d+)/$', ProjectFormView.as_view(), name='project_edit'),
+    url(r'^project/(?P<pk>\d+)/delete$', ProjectDeleteView.as_view(), name='project_delete'),
 )
