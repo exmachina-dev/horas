@@ -40,6 +40,12 @@ class TimeRecord(models.Model):
     class Meta(object):
         ordering = ('project', 'date', 'employee',)
         unique_together = ('project', 'date', 'employee')
+        permissions = (
+            ('view_from_all', 'Can view timerecords attached to other employees'),
+            ('create_attached_timerecord', 'Can create timerecords attached to the user'),
+            ('change_attached_timerecord', 'Can edit timerecords attached to the user'),
+            ('delete_attached_timerecord', 'Can delete timerecords attached to the user'),
+        )
 
     @property
     def formatted_hours(self):
