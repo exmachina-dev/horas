@@ -105,23 +105,17 @@ form {
     min-width: 8em;
     text-align: right;
 }
-form input, form select {
-    padding: 0.4em 1em;
-    -webkit-appearance: none;
-}
-/*
+
 form input, form select {
     -webkit-appearance: none;
     box-sizing: content-box;
     display: inline-block;
     width: auto;
-    padding: 2px 4px;
-    margin: 2px 0px;
+    padding: 0.4em 1em;
     color: #333;
     background-color: rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 2px;
-    height: 19px;
+    border-radius: 0.3em;
     font-family: monospace;
 }
 form input[type="checkbox"] {
@@ -129,12 +123,16 @@ form input[type="checkbox"] {
 }
 form input[type="submit"] {
     margin: 1em;
-    margin-left: 8em;
+    margin-left: 2em;
 }
 #login_form form input[type="submit"] {
     margin: 2em;
     margin-left: 10em;
-}*/
+}
+form ul {
+    margin: 0px;
+    padding: 0px;
+}
 form p {
     text-align: left;
 }
@@ -228,17 +226,20 @@ form p {
 
 #content table tr {
     width: auto;
-    background: rgba(127, 127, 255, 0.05);
+    border: 1px solid #666;
+    border-top: 0px;
+    border-bottom: 0px;
+    background: rgba(255, 255, 255, 0.15);
 }
 #content table tr:hover {
-    background: rgba(127, 127, 255, 0.15);
+    background: rgba(255, 255, 255, 0.7);
 }
 
 #content table td.alt, #content table tr.alt {
-    background: rgba(127, 127, 255, 0.1);
+    background: rgba(255, 255, 255, 0.25);
 }
 #content table tr.alt:hover {
-    background: rgba(127, 127, 255, 0.2);
+    background: rgba(255, 255, 255, 0.8);
 }
 #content table th {
     font-weight: normal;
@@ -246,12 +247,12 @@ form p {
     font-size: 1.1em;
     padding: 2px 5px;
     background: rgba(255, 255, 255, 0.25);
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    border: 1px solid #666;
     height: 1.25em;
 }
 #content table td {
     empty-cells: hide;
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    border: 1px solid #666;
     padding: 3px 5px;
     height: 1.25em;
 }
@@ -274,6 +275,9 @@ form p {
 #content table td.employee_hour_tag, #content table td.empty_hour_tag {
     display: table-cell;
     min-width: 4em;
+}
+#content table td.employee_hour_tag {
+    border: 1px solid rgba(0, 0, 0, 0.40);
 }
 span.bubble {
     display: none;
@@ -390,7 +394,7 @@ td.project_cell:hover span.bubble, td.subproject_cell:hover span.bubble {
 #content div#timerecord_quick_add ul li {
     display: inline-block;
 }
-/*#content div#timerecord_quick_add input {
+#content div#timerecord_quick_add input {
     margin: 0;
     margin-right: 1em;
-}*/
+}
