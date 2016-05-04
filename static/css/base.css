@@ -322,47 +322,8 @@ td.project_cell:hover span.bubble, td.subproject_cell:hover span.bubble {
     box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.2) inset;
     text-shadow: 1px 1px 2px rgba(0,0,0, 0.2);
 }
-#content table td.taux_spectacle_taux {
-    font-style: normal;
-}
-#content table td.table_actions {
-    text-align: center;
-}
 
-#content table td.taux_spectacle_taux, #page table td.taux_seance_taux {
-    font-size: 0.8em;
-}
-
-#content table td meter {
-    display: inline-block;
-    background: rgba(0, 0, 0, 0.03);
-    height: 0.9em;
-    width: 20em;
-    -webkit-appearance: none;
-}
-#content table td meter::-webkit-meter-bar {
-    background: #eee;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 1px;
-}
-#content table td meter::-webkit-meter-optimum-value {
-    background: rgba(0, 255, 0, 0.7);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 2px;
-}
-
-#content table td meter::-webkit-meter-suboptimum-value {
-    background: rgba(255, 0, 0, 0.7);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 2px;
-}
-
-#content table td meter::-webkit-meter-even-less-good-value {
-    background: rgba(255, 0, 127, 0.7);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 2px;
-}
-
+/* Employee filters */
 #content ul.employee_legend p {
     display: inline-block;
     margin: 0;
