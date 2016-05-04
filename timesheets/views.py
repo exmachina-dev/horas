@@ -275,7 +275,7 @@ class SubProjectEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
     template_name = 'timesheets/subproject_edit.html'
     form_class = SubProjectForm
     model = SubProject
-    success_url = 'timesheets/subproject_list.html'
+    success_url = '/timesheets/subprojects'
     permission_required = 'timesheets.change_subproject'
     permission_denied_message = 'You don\'t have the permission to edit subprojects.'
 
@@ -294,7 +294,7 @@ class SubProjectEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
 class ProjectEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'timesheets/project_edit.html'
     form_class = ProjectForm
-    success_url = '/timesheets/project_list.html'
+    success_url = '/timesheets/projects'
     model = Project
     permission_required = 'timesheets.change_project'
     permission_denied_message = 'You don\'t have the permission to edit projects.'
