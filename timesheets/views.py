@@ -28,13 +28,31 @@ def get_timesheet(**kwargs):
     else:
         employees = Employee.objects.all().order_by('user__username')
 
-    to_date = kwargs.get('to_date', date.today())
-    from_date = kwargs.get('from_date', date.today() - timedelta(days=7))
+    from_date = kwargs.get('from_date', date.today() - timedelta(days=date.today().weekday()))
+    to_date = kwargs.get('to_date', from_date + timedelta(days=6))
 
     subprojects = SubProject.objects.all()
     date_span = (to_date - from_date).days
     day_range = [to_date - timedelta(days=x) for x in range(0, date_span + 1)]
     day_range.reverse()
+
+    from_jogline = {
+        'beginning_of_week': from_date - timedelta(days=from_date.weekday()),
+        'previous_week': from_date - timedelta(days=from_date.weekday()) - timedelta(days=7),
+        'previous_month': from_date - timedelta(days=from_date.day),
+        'next_week': from_date + timedelta(days=from_date.weekday()) - timedelta(days=7),
+        'next_month': from_date + timedelta(days=from_date.day),
+        'end_of_week': from_date + timedelta(days=7 - from_date.weekday()),
+    }
+
+    to_jogline = {
+        'beginning_of_week': to_date - timedelta(days=to_date.weekday()),
+        'previous_week': to_date - timedelta(days=to_date.weekday()) - timedelta(days=7),
+        'previous_month': to_date - timedelta(days=to_date.day),
+        'next_week': to_date + timedelta(days=to_date.weekday()) - timedelta(days=7),
+        'next_month': to_date + timedelta(days=to_date.day),
+        'end_of_week': to_date + timedelta(days=7 - to_date.weekday()),
+    }
 
     timesheet = []
 
@@ -90,6 +108,8 @@ def get_timesheet(**kwargs):
         'total': TimeRecord.objects.filter(date__range=(from_date, to_date), employee__in=employees).aggregate(Sum('hours'))['hours__sum'] or 0,
         'start_date': from_date,
         'end_date': to_date,
+        'start_jogline': from_jogline,
+        'end_jogline': to_jogline,
     }
 
     return context
@@ -110,14 +130,17 @@ class HomeView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ts_kwargs = {
-            'from_date': datetime.strptime(self.kwargs.get('from_date'), '%Y%m%d') or date.today()-timedelta(days=7),
-            'to_date': datetime.strptime(self.kwargs.get('to_date'), '%Y%m%d') or date.today(),
             'project': self.kwargs.get('project'),
             'subproject': self.kwargs.get('subproject'),
             'employees': self.kwargs.get('employees'),
         }
+        if self.kwargs.get('from_date'):
+            ts_kwargs.update({'from_date': datetime.strptime(self.kwargs.get('from_date'), '%Y%m%d')})
+        if self.kwargs.get('to_date'):
+            ts_kwargs.update({'to_date': datetime.strptime(self.kwargs.get('to_date'), '%Y%m%d')})
+
         if not self.request.user.has_perm('view_from_all'):
-            ts_kwargs.update({'employees': self.request.user.employee})
+            ts_kwargs.update({'employees': self.request.user.username})
         context.update(get_timesheet(**ts_kwargs))
 
         return context

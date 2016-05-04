@@ -326,6 +326,7 @@ td.project_cell:hover span.bubble, td.subproject_cell:hover span.bubble {
 }
 
 /* Employee filters */
+
 #content ul.employee_legend p {
     display: inline-block;
     margin: 0;
@@ -351,6 +352,7 @@ td.project_cell:hover span.bubble, td.subproject_cell:hover span.bubble {
 }
 
 /* Quick add bar */
+
 #content div#timerecord_quick_add ul {
     list-style-type: none;
 }
@@ -360,4 +362,32 @@ td.project_cell:hover span.bubble, td.subproject_cell:hover span.bubble {
 #content div#timerecord_quick_add input {
     margin: 0;
     margin-right: 1em;
+}
+
+/* Jogline */
+
+#content p.jogline {
+    background: rgba(0, 0, 0, 0.35);
+    padding: 0.4em;
+}
+#content p.jogline span {
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+}
+#content p.jogline span.end_jogline {
+    float: right;
+}
+#content p.jogline a {
+    text-decoration: none;
+    padding: 0.25em 0.5em;
+    margin: 0 0.3em;
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: color 500ms ease, background-color 250ms ease;
+    -webkit-transition: color 500ms ease, background-color 250ms ease;
+}
+#content p.jogline a:hover {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.6);
 }

@@ -7,11 +7,26 @@
 <ul class="employee_legend">
     {% if employees|length > 1 %}<p>Filter by employee:</p>{% else %}<p>Legend:</p>{% endif %}
     {% for employee in employees %}
-    <li style="background-color: {{ employee.color }};"><a class="ico_filter" href="{% url 'timesheets:timesheet_by_employee' employees=employee.user.username %}">{{ employee.user.username }}</a></li>
+    <li style="background-color: {{ employee.color }};"><a class="ico_filter" href="{% url 'timesheets:home' from_date=start_date|date:"Ymd" to_date=end_date|date:"Ymd" employees=employee.user.username %}">{{ employee.user.username }}</a></li>
     {% endfor %}
     {% if 'employee' in filter_by %}<li><a class="ico_filter_nofilter" href="#">reset</a></li>{% endif %}
 </ul>
-<p>From {{ start_date|date:"D j M Y" }} to {{ end_date|date:"D j M Y" }}</p>
+<p class="jogline">{% with start_jogline as sjog %}{% with end_jogline as ejog %}
+    <span class="start_jogline">
+        <a href="{% url 'timesheets:home' from_date=sjog.previous_month|date:"Ymd" to_date=end_date|date:"Ymd" %}">-1 month</a>
+        <a href="{% url 'timesheets:home' from_date=sjog.previous_week|date:"Ymd" to_date=end_date|date:"Ymd" %}">-1 week</a>
+        From {{ start_date|date:"D j M Y" }}
+        <a href="{% url 'timesheets:home' from_date=sjog.next_week|date:"Ymd" to_date=end_date|date:"Ymd" %}">+1 week</a>
+        <a href="{% url 'timesheets:home' from_date=sjog.next_month|date:"Ymd" to_date=end_date|date:"Ymd" %}">+1 month</a>
+    </span>
+    <span class="end_jogline">
+        <a href="{% url 'timesheets:home' to_date=ejog.previous_month|date:"Ymd" from_date=start_date|date:"Ymd" %}">-1 month</a>
+        <a href="{% url 'timesheets:home' to_date=ejog.previous_week|date:"Ymd" from_date=start_date|date:"Ymd" %}">-1 week</a>
+        To {{ end_date|date:"D j M Y" }}
+        <a href="{% url 'timesheets:home' to_date=ejog.next_week|date:"Ymd" from_date=start_date|date:"Ymd" %}">+1 week</a>
+        <a href="{% url 'timesheets:home' to_date=ejog.next_month|date:"Ymd" from_date=start_date|date:"Ymd" %}">+1 month</a>
+    </span>
+</p>{% endwith %}{% endwith %}
 <table class="project_table table table-hover">
     <thead>
         <tr>
