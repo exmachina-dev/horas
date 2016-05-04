@@ -2,12 +2,6 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<ul class="employee_legend">
-    <p>Filter by employee:</p>
-    {% for employee in employees %}
-    <li style="background-color: {{ employee.color }};"><a class="ico_filter" href="{% url 'timesheets:timesheet_by_employee' employee=employee.user.username %}">{{ employee.user.username }}</a></li>
-    {% endfor %}
-</ul>
 {% include 'timesheets/timerecord_quick_add.html' %}
 {{ block.super }}
 {% endblock %}

@@ -4,6 +4,12 @@
 {% block title %}Timesheet{% endblock %}
 
 {% block content %}
+<ul class="employee_legend">
+    {% if employees|length > 1 %}<p>Filter by employee:</p>{% else %}<p>Legend:</p>{% endif %}
+    {% for employee in employees %}
+    <li style="background-color: {{ employee.color }};"><a class="ico_filter" href="{% url 'timesheets:timesheet_by_employee' employees=employee.user.username %}">{{ employee.user.username }}</a></li>
+    {% endfor %}
+</ul>
 <p>From {{ start_date|date:"D j M Y" }} to {{ end_date|date:"D j M Y" }}</p>
 <table class="project_table table table-hover">
     <thead>
