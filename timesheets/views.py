@@ -237,7 +237,7 @@ class TimeRecordEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['action'] = 'modify'
+        context['action'] = 'update'
 
         return context
 
@@ -269,9 +269,7 @@ class SubProjectEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['action'] = 'create'
-        if 'timerecord_id' in self.kwargs:
-            context['action'] = 'modify'
+        context['action'] = 'update'
 
         return context
 
@@ -291,9 +289,7 @@ class ProjectEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['action'] = 'create'
-        if 'timerecord_id' in self.kwargs:
-            context['action'] = 'modify'
+        context['action'] = 'update'
 
         return context
 
