@@ -155,7 +155,7 @@ class ProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'timesheets.view_project_list'
 
 
-class TimeRecordNewView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class TimeRecordNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'timesheets/timerecord_edit.html'
     form_class = TimeRecordForm
     initial = {
@@ -197,6 +197,34 @@ class TimeRecordNewView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         return super().post(request, *args, **kwargs)
 
 
+class SubProjectNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    template_name = 'timesheets/subproject_edit.html'
+    form_class = SubProjectForm
+    success_url = '/subproject'
+    permission_required = 'timesheets.add_subproject'
+    permission_denied_message = 'You don\'t have the permission to create subprojects.'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'create'
+
+        return context
+
+
+class ProjectNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    template_name = 'timesheets/project_edit.html'
+    form_class = ProjectForm
+    success_url = '/projects'
+    permission_required = 'timesheets.add_project'
+    permission_denied_message = 'You don\'t have the permission to create projects.'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'create'
+
+        return context
+
+
 class TimeRecordEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'timesheets/timerecord_edit.html'
     model = TimeRecord
@@ -229,7 +257,7 @@ class TimeRecordEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
         return super().post(request, *args, **kwargs)
 
 
-class SubProjectFormView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class SubProjectEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'timesheets/subproject_edit.html'
     form_class = SubProjectForm
     model = SubProject
@@ -251,7 +279,7 @@ class SubProjectFormView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
         return self.initial
 
 
-class ProjectFormView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class ProjectEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'timesheets/project_edit.html'
     form_class = ProjectForm
     success_url = '/timesheets/project_list.html'

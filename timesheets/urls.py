@@ -2,9 +2,9 @@ from django.conf.urls import patterns, url
 
 from .views import HomeView
 from .views import TimeSheetView, SubProjectListView, ProjectListView
-from .views import SubProjectFormView, ProjectFormView
-from .views import SubProjectDeleteView, ProjectDeleteView
-from .views import TimeRecordNewView, TimeRecordEditView, TimeRecordDeleteView
+from .views import TimeRecordNewView, SubProjectNewView, ProjectNewView
+from .views import TimeRecordEditView, SubProjectEditView, ProjectEditView
+from .views import TimeRecordDeleteView, SubProjectDeleteView, ProjectDeleteView
 
 urlpatterns = patterns(
     '',
@@ -19,11 +19,11 @@ urlpatterns = patterns(
     url(r'^timerecord/(?P<pk>\d+)/$', TimeRecordEditView.as_view(), name='timerecord_edit'),
     url(r'^timerecord/(?P<pk>\d+)/delete$', TimeRecordDeleteView.as_view(), name='timerecord_delete'),
 
-    url(r'^subproject/new$', SubProjectFormView.as_view(), name='subproject_new'),
-    url(r'^subproject/(?P<pk>\d+)/$', SubProjectFormView.as_view(), name='subproject_edit'),
+    url(r'^subproject/new$', SubProjectNewView.as_view(), name='subproject_new'),
+    url(r'^subproject/(?P<pk>\d+)/$', SubProjectEditView.as_view(), name='subproject_edit'),
     url(r'^subproject/(?P<pk>\d+)/delete$', SubProjectDeleteView.as_view(), name='subproject_delete'),
 
-    url(r'^project/new$', ProjectFormView.as_view(), name='project_new'),
-    url(r'^project/(?P<pk>\d+)/$', ProjectFormView.as_view(), name='project_edit'),
+    url(r'^project/new$', ProjectNewView.as_view(), name='project_new'),
+    url(r'^project/(?P<pk>\d+)/$', ProjectEditView.as_view(), name='project_edit'),
     url(r'^project/(?P<pk>\d+)/delete$', ProjectDeleteView.as_view(), name='project_delete'),
 )
