@@ -20,8 +20,9 @@ import json
 
 def get_timesheet(**kwargs):
     filter_by = list()
-    if 'employee' in kwargs:
-        employees = Employee.objects.filter(user__username__exact=kwargs['employee'])
+    employees = kwargs.get('employees')
+    if employees:
+        employees = Employee.objects.filter(user__username__in=employees.split(','))
         filter_by.append('employee')
     else:
         employees = Employee.objects.all().order_by('user__username')
@@ -107,14 +108,16 @@ class HomeView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        from_date = self.kwargs.get('form_date', date.today()-timedelta(days=7))
-        to_date = self.kwargs.get('to_date', date.today())
+        ts_kwargs = {
+            'from_date': self.kwargs.get('form_date', date.today()-timedelta(days=7)),
+            'to_date': self.kwargs.get('to_date', date.today()),
+            'project': self.kwargs.get('project'),
+            'subproject': self.kwargs.get('subproject'),
+            'employees': self.kwargs.get('employees'),
+        }
         if not self.request.user.has_perm('view_from_all'):
-            context.update(get_timesheet(
-                from_date=from_date, to_date=to_date,
-                employee=self.request.user.username))
-        else:
-            context.update(get_timesheet(from_date=from_date, to_date=to_date))
+            ts_kwargs.update({'employees': self.request.user.employee})
+        context.update(get_timesheet(**ts_kwargs))
 
         return context
 

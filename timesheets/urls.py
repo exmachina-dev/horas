@@ -9,7 +9,7 @@ from .views import TimeRecordDeleteView, SubProjectDeleteView, ProjectDeleteView
 urlpatterns = patterns(
     '',
     url(r'^$', HomeView.as_view(), name='home'),
-    url(r'^by_employee/(?P<employee>\w{1,4})/$', TimeSheetView.as_view(), name='timesheet_by_employee'),
+    url(r'^by_employee/(?P<employees>\w{1,4}(,\w{1,4})*)/$', TimeSheetView.as_view(), name='timesheet_by_employee'),
 
     #url(r'^timesheet/(?:by_subproject/(?P<subproject>)/)?(?:by_project/(?P<project>\d+)/)?$', TimeSheetView.as_view(), name='timesheet_view'),
     url(r'^subprojects/(?:by_project/(?P<project>\d+)/)?$', SubProjectListView.as_view(), name='subproject_list'),

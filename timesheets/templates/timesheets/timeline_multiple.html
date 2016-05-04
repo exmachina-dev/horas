@@ -9,6 +9,7 @@
     {% for employee in employees %}
     <li style="background-color: {{ employee.color }};"><a class="ico_filter" href="{% url 'timesheets:timesheet_by_employee' employees=employee.user.username %}">{{ employee.user.username }}</a></li>
     {% endfor %}
+    {% if 'employee' in filter_by %}<li><a class="ico_filter_nofilter" href="#">reset</a></li>{% endif %}
 </ul>
 <p>From {{ start_date|date:"D j M Y" }} to {{ end_date|date:"D j M Y" }}</p>
 <table class="project_table table table-hover">
