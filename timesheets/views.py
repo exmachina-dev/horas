@@ -149,6 +149,12 @@ class SubProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'timesheets.view_subproject_list'
     permission_denied_message = 'You don\'t have the permission to view the subproject list.'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if 'project' in self.kwargs and self.kwargs['project'] is not None:
+            context['project'] = Project.objects.get(pk=self.kwargs['project'])
+        return context
+
     def get_queryset(self):
         qs = super().get_queryset()
         if 'project' in self.kwargs and self.kwargs['project'] is not None:
