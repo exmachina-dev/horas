@@ -20,7 +20,7 @@
         <td>{{ project.initials|upper }}</td>
         <td>{{ project.name }}</td>
         <td>{{ project.subprojects.count }} - <a class="ico_view" href="{% url 'timesheets:subproject_list' project=project.id %}">view</a></td>
-        <td>{{ project.total_hours|fhours }}</td>
+        <td>{{ project.total_hours|fhours }} - <a class="ico_view" href="{% url 'timesheets:home' project=project.id %}">view</a></td>
         <td><a class="ico_edit" href="{% url 'timesheets:project_edit' pk=project.id %}">edit</a><a class="ico_delete inline_delete" href="{% url 'timesheets:project_delete' pk=project.id %}">delete</a></td>
     </tr>
     {% endfor %}

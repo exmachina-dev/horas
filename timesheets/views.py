@@ -31,7 +31,12 @@ def get_timesheet(**kwargs):
     from_date = kwargs.get('from_date', date.today() - timedelta(days=date.today().weekday()))
     to_date = kwargs.get('to_date', from_date + timedelta(days=6))
 
-    subprojects = SubProject.objects.all()
+    if kwargs.get('project'):
+        subprojects = Project.objects.get(pk=kwargs.get('project')).subprojects
+    elif kwargs.get('subproject'):
+        subprojects = SubProject.objects.filter(pk=kwargs.get('subproject'))
+    else:
+        subprojects = SubProject.objects.all()
     date_span = (to_date - from_date).days
     day_range = [to_date - timedelta(days=x) for x in range(0, date_span + 1)]
     day_range.reverse()
