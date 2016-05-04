@@ -19,8 +19,10 @@ import json
 
 
 def get_timesheet(**kwargs):
+    filter_by = list()
     if 'employee' in kwargs:
         employees = Employee.objects.filter(user__username__exact=kwargs['employee'])
+        filter_by.append('employee')
     else:
         employees = Employee.objects.all().order_by('user__username')
 
@@ -77,6 +79,7 @@ def get_timesheet(**kwargs):
     })
 
     context = {
+        'filter_by': filter_by,
         'employees': employees.order_by('user__username'),
         'subprojects': subprojects,
         'days': day_range,
