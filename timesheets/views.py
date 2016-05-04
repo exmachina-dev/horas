@@ -97,12 +97,6 @@ def get_timesheet(**kwargs):
 
         cur_date = cur_date + timedelta(days=1)
 
-    timesheet.append({
-        'subproject': subproject,
-        'timesheet': subproject_ts,
-        'project': subproject.parent_project,
-    })
-
     context = {
         'filter_by': filter_by,
         'employees': employees.order_by('user__username'),
