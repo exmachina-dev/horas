@@ -23,10 +23,10 @@
             <ul id="menu">
                 <li><a href="{% url 'home' %}">Home</a></li>
                 <li class="separator"></li>
-                <li><a href="{% url 'timesheets:home' %}">Timesheet</a></li>
-                <li><a href="{% url 'timesheets:subproject_list' %}">Subprojects</a></li>
-                <li><a href="{% url 'timesheets:project_list' %}">Projects</a></li>
                 {% with perms.timesheets as pt %}
+                <li><a href="{% url 'timesheets:home' %}">Timesheet</a></li>
+                {% if pt.view_subproject_list %}<li><a href="{% url 'timesheets:subproject_list' %}">Subprojects</a></li>{% endif %}
+                {% if pt.view_project_list %}<li><a href="{% url 'timesheets:project_list' %}">Projects</a></li>{% endif %}
                 {% if pt.add_timerecord or pt.add_subproject or pt.add_project %}<li class="separator"></li>{% endif %}
                 {% if pt.add_timerecord %}<li><a href="{% url 'timesheets:timerecord_new' %}">Add timerecord</a></li>{% endif %}
                 {% if pt.add_subproject %}<li><a href="{% url 'timesheets:subproject_new' %}">New subproject</a></li>{% endif %}

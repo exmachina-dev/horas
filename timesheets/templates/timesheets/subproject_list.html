@@ -3,7 +3,12 @@
 {% block title %}Project list{% endblock %}
 
 {% block content %}
-{% if project %}Only showing subprojects for {{ project }}{% endif %}
+{% if perms.timesheets.add_subproject %}
+<p>
+    <a class="ico_add" href="{% url 'timesheets:subproject_new' %}">new subproject</a>
+</p>
+{% endif %}
+{% if project %}<p>Only showing subprojects for {{ project }}</p>{% endif %}
 <table>
     <tr>
         <th>Project</th>

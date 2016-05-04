@@ -3,6 +3,11 @@
 {% block title %}Project list{% endblock %}
 
 {% block content %}
+{% if perms.timesheets.add_subproject %}
+<p>
+    <a class="ico_add" href="{% url 'timesheets:project_new' %}">new project</a>
+</p>
+{% endif %}
 <table>
     <tr>
         <th colspan="2">Project</th>
