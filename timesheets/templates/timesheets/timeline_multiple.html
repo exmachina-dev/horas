@@ -31,16 +31,13 @@
         </tr>
         {% endifchanged %}
         <tr class="{% cycle "" "alt" %}">
-            <td class="subproject_cell" rowspan="2">
+            <td class="subproject_cell">
                 {{ record.subproject.initials|upper}} - {{ record.subproject.name }}
                 <span class="bubble">
                     {% if perms.timesheets.change_subproject %}<a href="{% url 'timesheets:subproject_edit' pk=record.subproject.id %}" class="ico_edit">Edit</a>{% endif %}
                     {% if perms.timesheets.delete_subproject %}<a href="{% url 'timesheets:subproject_delete' pk=record.subproject.id %}" class="ico_delete inline_delete">Delete</a>{% endif %}
                 </span>
                 </td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr class="{% cycle "" "alt" %}">
             <td class="hours_subproject_cell">{{ record.total_hours_by_subproject|fhours }}</td>
         </tr>
         {% endfor %}
@@ -48,7 +45,7 @@
     <tfoot>
         <tr>
             <td class="project_cell">Total</td>
-            <td class="hours_project_cell">{{ total|fhours }}</td>
+            <td class="timesheet_total_cell">{{ total|fhours }}</td>
         </tr>
     </tfoot>
 </table>
@@ -57,12 +54,12 @@
     <thead>
         <tr>
             {% for day in days %}
-            <th colspan="{{ employees|length }}">{{ day|date:"W" }}</th>
+            <th colspan="{{ employees|length|add:"1" }}">{{ day|date:"W" }}</th>
             {% endfor %}
         </tr>
         <tr>
             {% for day in days %}
-            <th colspan="{{ employees|length }}">{{ day|date:"D j" }}</th>
+            <th colspan="{{ employees|length|add:"1" }}">{{ day|date:"D j" }}</th>
             {% endfor %}
         </tr>
     </thead>
@@ -71,11 +68,11 @@
         {% ifchanged record.project %}
         <tr>
             {% for day in days %}
-            <td class="project_hours_cell" colspan="{{ employees|length }}">&nbsp;{{ record.total_hours_by_subproject|fhours }}</td>
+            <td class="project_hours_cell" colspan="{{ employees|length|add:"1" }}">&nbsp;{{ record.total_hours_by_project|fhours }}</td>
             {% endfor %}
         </tr>
         {% endifchanged %}
-        <tr>
+        <tr class="{% cycle "" "alt" %}">
             {% for day in record.timesheet %}
                 {% for line in day.timerecords %}
                 <td class="employee_hour_tag" style="color: #eee; background-color: {{ line.employee.color }};">
@@ -85,21 +82,17 @@
                         <a class="but_delete inline_delete" href="{% url 'timesheets:timerecord_delete' pk=line.id %}">Delete</a>
                     </span>
                 </td>
-                {% if forloop.last and forloop.counter < employees|length %}
-                    {% for e in employees %}
-                        {% if forloop.parentloop.counter|add:forloop.counter <= employees|length %}<td class="empty_hour_tag">&nbsp;</td>{% endif %}
-                    {% endfor %}
-                {% endif %}
+                    {% if forloop.last and forloop.counter < employees|length %}
+                        {% for e in employees %}
+                            {% if forloop.parentloop.counter|add:forloop.counter <= employees|length %}<td class="empty_hour_tag">&nbsp;</td>{% endif %}
+                        {% endfor %}
+                    {% endif %}
                 {% empty %}
                     {% for e in employees %}
                         <td class="empty_hour_tag">&nbsp;</td>
                     {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        </tr>
-        <tr class="{% cycle "" "alt" %}">
-            {% for day in record.timesheet %}
-            <td class="subproject_hours_cell" colspan="{{ employees|length }}">{{ day.total_hours|fhours }}</td>
+                <td class="subproject_hours_cell">{{ day.total_hours|fhours }}</td>
             {% endfor %}
         </tr>
         {% endfor %}
@@ -119,6 +112,7 @@
                         <td class="empty_hour_tag">&nbsp;</td>
                     {% endfor %}
                 {% endfor %}
+                <td class="subproject_hours_cell">{{ total.total_hours|fhours }}</td>
             {% endfor %}
         </tr>
     </tfoot>

@@ -257,13 +257,13 @@ form p {
     height: 1.25em;
 }
 
-#content table td.project_hours_cell, #content table td.subproject_hours_cell {
+#content table td.project_hours_cell {
     font-style: italic;
     text-align: center;
 }
 #content table td.subproject_hours_cell {
-    text-align: right;
-    font-weight: bold;
+    text-align: center;
+    font-weight: normal;
 }
 
 #content table td.project_cell {
@@ -272,11 +272,11 @@ form p {
 #content table td.subproject_cell {
     padding-left: 2em;
 }
-#content table td.employee_hour_tag, #content table td.empty_hour_tag {
+#content table td.employee_hour_tag, #content table td.empty_hour_tag, #content table td.subproject_hours_cell {
     display: table-cell;
     min-width: 4em;
 }
-#content table td.employee_hour_tag {
+#content table td.employee_hour_tag, #content table td.subproject_hours_cell {
     border: 1px solid rgba(0, 0, 0, 0.40);
 }
 span.bubble {
