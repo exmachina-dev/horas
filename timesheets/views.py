@@ -14,6 +14,7 @@ from .auth_mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from datetime import date
 from datetime import timedelta
+from datetime import datetime
 
 import json
 
@@ -109,8 +110,8 @@ class HomeView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ts_kwargs = {
-            'from_date': self.kwargs.get('form_date', date.today()-timedelta(days=7)),
-            'to_date': self.kwargs.get('to_date', date.today()),
+            'from_date': datetime.strptime(self.kwargs.get('from_date'), '%Y%m%d') or date.today()-timedelta(days=7),
+            'to_date': datetime.strptime(self.kwargs.get('to_date'), '%Y%m%d') or date.today(),
             'project': self.kwargs.get('project'),
             'subproject': self.kwargs.get('subproject'),
             'employees': self.kwargs.get('employees'),
