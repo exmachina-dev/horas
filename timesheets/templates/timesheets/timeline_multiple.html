@@ -61,12 +61,12 @@
     <thead>
         <tr>
             {% for day in days %}
-            <th colspan="{{ employees|length|add:"1" }}">{{ day|date:"W" }}</th>
+            <th colspan="{% if employees|length <= 1 %}{{ employees|length }}{% else %}{{ employees|length|add:"1" }}{% endif %}">{{ day|date:"W" }}</th>
             {% endfor %}
         </tr>
         <tr>
             {% for day in days %}
-            <th colspan="{{ employees|length|add:"1" }}">{{ day|date:"D j" }}</th>
+            <th colspan="{% if employees|length <= 1 %}{{ employees|length }}{% else %}{{ employees|length|add:"1" }}{% endif %}">{{ day|date:"D j" }}</th>
             {% endfor %}
         </tr>
     </thead>
@@ -75,7 +75,7 @@
         {% ifchanged record.project %}
         <tr>
             {% for day in days %}
-            <td class="project_hours_cell" colspan="{{ employees|length|add:"1" }}">&nbsp;{{ record.total_hours_by_project|fhours }}</td>
+            <td class="project_hours_cell" colspan="{% if employees|length <= 1 %}{{ employees|length }}{% else %}{{ employees|length|add:"1" }}{% endif %}">&nbsp;{{ record.total_hours_by_project|fhours }}</td>
             {% endfor %}
         </tr>
         {% endifchanged %}
@@ -99,7 +99,7 @@
                         <td class="empty_hour_tag">&nbsp;</td>
                     {% endfor %}
                 {% endfor %}
-                <td class="subproject_hours_cell">{{ day.total_hours|fhours }}</td>
+                {% if employees|length > 1 %}<td class="subproject_hours_cell">{{ day.total_hours|fhours }}</td>{% endif %}
             {% endfor %}
         </tr>
         {% endfor %}
@@ -119,7 +119,7 @@
                         <td class="empty_hour_tag">&nbsp;</td>
                     {% endfor %}
                 {% endfor %}
-                <td class="subproject_hours_cell">{{ total.total_hours|fhours }}</td>
+                {% if employees|length > 1 %}<td class="subproject_hours_cell">{{ total.total_hours|fhours }}</td>{% endif %}
             {% endfor %}
         </tr>
     </tfoot>

@@ -312,7 +312,6 @@ td.project_cell:hover span.bubble, td.subproject_cell:hover span.bubble {
 }
 #content table td.empty_hour_tag {
     border-left: none;
-    border-right: none;
 }
 
 
