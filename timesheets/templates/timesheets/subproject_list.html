@@ -11,14 +11,14 @@
 {% if project %}<p>Only showing subprojects for {{ project }}</p>{% endif %}
 <table>
     <tr>
-        <th>Project</th>
+        {% if not project %}<th>Project</th>{% endif %}
         <th colspan="2">Subproject</th>
         <th>Hours</th>
         <th></th>
     </tr>
     {% for subproject in object_list %}
     <tr>
-        <td>{{ subproject.parent_project }}</td>
+        {% if not project %}<td>{{ subproject.parent_project }}</td>{% endif %}
         <td>{{ subproject.initials|upper }}</td>
         <td>{{ subproject.name }}</td>
         <td>{{ subproject.total_hours|fhours }}</td>
