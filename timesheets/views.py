@@ -141,6 +141,7 @@ class TimeSheetView(LoginRequiredMixin, ListView):
 class SubProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = SubProject
     permission_required = 'timesheets.view_subproject_list'
+    permission_denied_message = 'You don\'t have the permission to view the subproject list.'
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -153,6 +154,7 @@ class SubProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 class ProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Project
     permission_required = 'timesheets.view_project_list'
+    permission_denied_message = 'You don\'t have the permission to project list.'
 
 
 class TimeRecordNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -163,7 +165,7 @@ class TimeRecordNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
         'date': date.today(),
     }
     success_url = '/timesheets'
-    permission_required = 'timesheets.create_timerecord'
+    permission_required = 'timesheets.add_timerecord'
     permission_denied_message = 'You don\'t have the permission to create timerecords.'
 
     def get_context_data(self, **kwargs):
@@ -184,7 +186,7 @@ class TimeRecordNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
         initial_result = self.request.user.has_perms(perms)
 
         if not initial_result:
-            return self.request.user.has_perm('timesheets.create_attached_timerecord')
+            return self.request.user.has_perm('timesheets.add_attached_timerecord')
         return initial_result
 
     def post(self, request, *args, **kwargs):
