@@ -49,7 +49,7 @@
                     {% if perms.timesheets.delete_project %}<a href="{% url 'timesheets:project_delete' pk=record.project.id %}" class="ico_delete inline_delete">Delete</a>{% endif %}
                 </span>
             </td>
-            <td class="hours_project_cell">{{ record.total_hours_by_project|fhours }}</td>
+            <td class="project_hours_cell">{{ record.total_hours_by_project|fhours }}</td>
         </tr>
         {% endifchanged %}
         <tr class="{% cycle "" "alt" %}">
@@ -60,7 +60,7 @@
                     {% if perms.timesheets.delete_subproject %}<a href="{% url 'timesheets:subproject_delete' pk=record.subproject.id %}" class="ico_delete inline_delete">Delete</a>{% endif %}
                 </span>
                 </td>
-            <td class="hours_subproject_cell">{{ record.total_hours_by_subproject|fhours }}</td>
+            <td class="subproject_hours_cell">{{ record.total_hours_by_subproject|fhours }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -89,8 +89,8 @@
         {% for record in timesheet %}
         {% ifchanged record.project %}
         <tr>
-            {% for day in days %}
-            <td class="project_hours_cell" colspan="{% if employees|length <= 1 %}{{ employees|length }}{% else %}{{ employees|length|add:"1" }}{% endif %}">&nbsp;{{ record.total_hours_by_project|fhours }}</td>
+            {% for day in record.timesheet %}
+                <td class="project_hours_cell" colspan="{% if employees|length <= 1 %}{{ employees|length }}{% else %}{{ employees|length|add:"1" }}{% endif %}">&nbsp;{{ day.total_hours_by_project|fhours }}</td>
             {% endfor %}
         </tr>
         {% endifchanged %}
@@ -114,16 +114,16 @@
                         <td class="empty_hour_tag">&nbsp;</td>
                     {% endfor %}
                 {% endfor %}
-                {% if employees|length > 1 %}<td class="subproject_hours_cell">{{ day.total_hours|fhours }}</td>{% endif %}
+                {% if employees|length > 1 %}<td class="subproject_hours_cell">{{ day.total_hours_by_subproject|fhours }}</td>{% endif %}
             {% endfor %}
         </tr>
         {% endfor %}
     </tbody>
     <tfoot>
         <tr>
-            {% for days in total_hours %}
-                {% for total in days %}
-                    <td class="employee_hour_tag" style="color: #eee; background-color: {{ total.employee.color }};">{{ total.total_hours|fhours }}</td>
+            {% for day in total_hours %}
+                {% for total_by_employee in day.hours_by_employee %}
+                    <td class="employee_hour_tag" style="color: #eee; background-color: {{ total_by_employee.employee.color }};">{{ total_by_employee.total_hours|fhours }}</td>
                     {% if forloop.last and forloop.counter < employees|length %}
                         {% for e in employees %}
                             {% if forloop.parentloop.counter|add:forloop.counter <= employees|length %}<td class="empty_hour_tag">&nbsp;</td>{% endif %}
@@ -134,7 +134,7 @@
                         <td class="empty_hour_tag">&nbsp;</td>
                     {% endfor %}
                 {% endfor %}
-                {% if employees|length > 1 %}<td class="subproject_hours_cell">{{ total.total_hours|fhours }}</td>{% endif %}
+                {% if employees|length > 1 %}<td class="subproject_hours_cell">{{ day.total_hours_by_day|fhours }}</td>{% endif %}
             {% endfor %}
         </tr>
     </tfoot>

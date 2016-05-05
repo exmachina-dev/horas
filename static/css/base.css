@@ -260,11 +260,24 @@ form p {
     vertical-align: inherit;
 }
 
-#content table td.project_hours_cell {
+#content table.project_table td.project_hours_cell {
+    text-align: left;
+    font-style: italic;
+    width: 7em;
+}
+#content table.project_table td.subproject_hours_cell {
+    text-align: right;
+    width: 7em;
+}
+#content table.project_table td.timesheet_total_cell {
+    font-weight: bold;
+    text-align: center;
+}
+#content table.timesheet_table td.project_hours_cell {
     font-style: italic;
     text-align: center;
 }
-#content table td.subproject_hours_cell {
+#content table.timesheet_table td.subproject_hours_cell {
     text-align: center;
     font-weight: normal;
 }

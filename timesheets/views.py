@@ -62,38 +62,46 @@ def get_timesheet(**kwargs):
     timesheet = []
 
     for subproject in subprojects:
-        subproject_qs = subproject.timerecords.filter(date__range=(from_date, to_date), employee__in=employees).order_by('date')
+        project_tr = subproject.parent_project.timerecords.filter(date__range=(from_date, to_date), employee__in=employees).order_by('date')
+        subproject_tr = project_tr.filter(project=subproject).order_by('date')
         cur_date = from_date
         subproject_ts = []
         while cur_date <= to_date:
-            date_qs = subproject_qs.filter(date=cur_date).order_by('employee')
+            date_tr = subproject_tr.filter(date=cur_date)
+            hours_by_project = project_tr.filter(date=cur_date).aggregate(Sum('hours'))['hours__sum'] or None
             subproject_ts.append({
                 'date': cur_date,
-                'timerecords': date_qs,
-                'total_hours': date_qs.aggregate(Sum('hours'))['hours__sum'] or None,
+                'timerecords': date_tr.order_by('employee'),
+                'total_hours_by_subproject': date_tr.aggregate(Sum('hours'))['hours__sum'] or None,
+                'total_hours_by_project': hours_by_project,
             })
             cur_date = cur_date + timedelta(days=1)
         timesheet.append({
             'subproject': subproject,
-            'total_hours_by_subproject': subproject_qs.aggregate(Sum('hours'))['hours__sum'] or None,
+            'total_hours_by_subproject': subproject_tr.aggregate(Sum('hours'))['hours__sum'] or None,
             'timesheet': subproject_ts,
             'project': subproject.parent_project,
+            'total_hours_by_project': subproject.parent_project.timerecords.filter(date__range=(from_date, to_date), employee__in=employees).aggregate(Sum('hours'))['hours__sum'] or None,
         })
 
     cur_date = from_date
-    totalhours_ts = []
+    total_hours_ts = []
     while cur_date <= to_date:
-        hours_by_day = []
+        hours_by_employee = []
+        total_hours_by_day = TimeRecord.objects.filter(date=cur_date).aggregate(Sum('hours'))['hours__sum'] or None
         for employee in employees:
-            timerecord_qs = TimeRecord.objects.filter(date=cur_date, employee=employee)
-            totalhours_by_day = timerecord_qs.aggregate(Sum('hours'))['hours__sum'] or None
-            if totalhours_by_day != 0:
-                hours_by_day.append({
+            timerecord_qs = TimeRecord.objects.filter(date=cur_date, employee=employee).order_by('eemployee')
+            hours = timerecord_qs.aggregate(Sum('hours'))['hours__sum'] or None
+            if hours != 0:
+                hours_by_employee.append({
                     'employee': employee,
-                    'total_hours': totalhours_by_day,
+                    'total_hours': hours,
                 })
 
-        totalhours_ts.append(hours_by_day)
+        total_hours_ts.append({
+            'hours_by_employee': hours_by_employee,
+            'total_hours_by_day': total_hours_by_day,
+        })
 
         cur_date = cur_date + timedelta(days=1)
 
@@ -103,7 +111,7 @@ def get_timesheet(**kwargs):
         'subprojects': subprojects,
         'days': day_range,
         'timesheet': timesheet,
-        'total_hours': totalhours_ts,
+        'total_hours': total_hours_ts,
         'total': TimeRecord.objects.filter(date__range=(from_date, to_date), employee__in=employees).aggregate(Sum('hours'))['hours__sum'] or 0,
         'start_date': from_date,
         'end_date': to_date,
