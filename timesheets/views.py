@@ -45,7 +45,7 @@ def get_timesheet(**kwargs):
         'beginning_of_week': from_date - timedelta(days=from_date.weekday()),
         'previous_week': from_date - timedelta(days=from_date.weekday()) - timedelta(days=7),
         'previous_month': from_date - timedelta(days=from_date.day),
-        'next_week': from_date + timedelta(days=from_date.weekday()) - timedelta(days=7),
+        'next_week': from_date + timedelta(days=from_date.weekday()) + timedelta(days=7),
         'next_month': from_date + timedelta(days=from_date.day),
         'end_of_week': from_date + timedelta(days=7 - from_date.weekday()),
     }
@@ -54,7 +54,7 @@ def get_timesheet(**kwargs):
         'beginning_of_week': to_date - timedelta(days=to_date.weekday()),
         'previous_week': to_date - timedelta(days=to_date.weekday()) - timedelta(days=7),
         'previous_month': to_date - timedelta(days=to_date.day),
-        'next_week': to_date + timedelta(days=to_date.weekday()) - timedelta(days=7),
+        'next_week': to_date + timedelta(days=to_date.weekday()) + timedelta(days=7),
         'next_month': to_date + timedelta(days=to_date.day),
         'end_of_week': to_date + timedelta(days=7 - to_date.weekday()),
     }
