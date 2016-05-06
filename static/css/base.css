@@ -382,19 +382,27 @@ td.project_cell:hover span.bubble, td.subproject_cell:hover span.bubble {
 #content p.jogline {
     background: rgba(0, 0, 0, 0.35);
     padding: 0.4em;
+    display: flex;
 }
 #content p.jogline span {
+    flex-grow: 1;
     display: inline-block;
     margin: 0px;
     padding: 0px;
 }
+#content p.jogline span.start_jogline, #content p.jogline span.end_jogline {
+}
+#content p.jogline span.now_jogline {
+    text-align: center;
+}
 #content p.jogline span.end_jogline {
-    float: right;
+    text-align: right;
 }
 #content p.jogline a {
     text-decoration: none;
     padding: 0.25em 0.5em;
     margin: 0 0.3em;
+    font-size: 0.75em;
     background: rgba(255, 255, 255, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.6);
     transition: color 500ms ease, background-color 250ms ease;
