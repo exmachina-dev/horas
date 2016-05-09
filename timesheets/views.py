@@ -16,6 +16,8 @@ from datetime import date
 from datetime import timedelta
 from datetime import datetime
 
+import calendar
+
 import json
 
 
@@ -41,22 +43,26 @@ def get_timesheet(**kwargs):
     day_range = [to_date - timedelta(days=x) for x in range(0, date_span + 1)]
     day_range.reverse()
 
+    bow = from_date - timedelta(days=from_date.weekday())
+    eow = from_date + timedelta(days=6 - from_date.weekday())
     from_jogline = {
-        'beginning_of_week': from_date - timedelta(days=from_date.weekday()),
-        'previous_week': from_date - timedelta(days=from_date.weekday()) - timedelta(days=7),
-        'previous_month': from_date - timedelta(days=from_date.day),
-        'next_week': from_date + timedelta(days=from_date.weekday()) + timedelta(days=7),
-        'next_month': from_date + timedelta(days=from_date.day),
-        'end_of_week': from_date + timedelta(days=7 - from_date.weekday()),
+        'beginning_of_week': bow,
+        'previous_week': bow - timedelta(days=7),
+        'previous_month': bow - timedelta(days=calendar.monthrange(from_date.year, from_date.month-1)[1]),
+        'next_week': bow + timedelta(days=7),
+        'next_month': bow + timedelta(days=calendar.monthrange(from_date.year, from_date.month)[1]),
+        'end_of_week': eow,
     }
 
+    bow = to_date - timedelta(days=to_date.weekday())
+    eow = to_date + timedelta(days=6 - to_date.weekday())
     to_jogline = {
-        'beginning_of_week': to_date - timedelta(days=to_date.weekday()),
-        'previous_week': to_date - timedelta(days=to_date.weekday()) - timedelta(days=7),
-        'previous_month': to_date - timedelta(days=to_date.day),
-        'next_week': to_date + timedelta(days=to_date.weekday()) + timedelta(days=7),
-        'next_month': to_date + timedelta(days=to_date.day),
-        'end_of_week': to_date + timedelta(days=7 - to_date.weekday()),
+        'beginning_of_week': bow,
+        'previous_week': eow - timedelta(days=7),
+        'previous_month': eow - timedelta(days=calendar.monthrange(from_date.year, from_date.month-1)[1]),
+        'next_week': eow + timedelta(days=7),
+        'next_month': eow + timedelta(days=calendar.monthrange(from_date.year, from_date.month)[1]),
+        'end_of_week': eow,
     }
 
     timesheet = []
