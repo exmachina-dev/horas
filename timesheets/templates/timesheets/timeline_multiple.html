@@ -67,6 +67,8 @@
                 </td>
             <td class="subproject_hours_cell">{{ record.total_hours_by_subproject|fhours }}</td>
         </tr>
+	{% empty %}
+		<tr><td colspan="2">No projects to display</td></tr>
         {% endfor %}
     </tbody>
     <tfoot>
@@ -122,6 +124,8 @@
                 {% if employees|length > 1 %}<td class="subproject_hours_cell">{{ day.total_hours_by_subproject|fhours }}</td>{% endif %}
             {% endfor %}
         </tr>
+	{% empty %}
+		<tr><td colspan="{{ days|length|multiply:employees|length }}">No timerecords</td></tr>
         {% endfor %}
     </tbody>
     <tfoot>
