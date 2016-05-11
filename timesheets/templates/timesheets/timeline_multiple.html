@@ -83,12 +83,16 @@
     <thead>
         <tr>
             {% for day in days %}
-            <th colspan="{% if employees|length <= 1 %}{{ employees|length }}{% else %}{{ employees|length|add:"1" }}{% endif %}">{{ day|date:"W" }}</th>
+                {% ifchanged day|date:"W" %}
+                    <th colspan="{% if employees|length <= 1 %}{{ employees|length }}{% else %}{{ employees|length|add:"1" }}{% endif %}">{{ day|date:"W" }}</th>
+                {% else %}
+                    <th colspan="{% if employees|length <= 1 %}{{ employees|length }}{% else %}{{ employees|length|add:"1" }}{% endif %}">&nbsp;</th>
+                {% endifchanged %}
             {% endfor %}
         </tr>
         <tr>
             {% for day in days %}
-            <th colspan="{% if employees|length <= 1 %}{{ employees|length }}{% else %}{{ employees|length|add:"1" }}{% endif %}">{{ day|date:"D j" }}</th>
+            <th colspan="{% if employees|length <= 1 %}{{ employees|length }}{% else %}{{ employees|length|add:"1" }}{% endif %}">{{ day|date:"D j M" }}</th>
             {% endfor %}
         </tr>
     </thead>

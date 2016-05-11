@@ -261,7 +261,7 @@ form p {
 }
 
 #content table.timesheet_table th {
-    min-width: 5em;
+    min-width: 7em;
 }
 
 #content table.project_table td.project_hours_cell {
