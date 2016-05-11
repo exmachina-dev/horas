@@ -375,7 +375,7 @@ class TimeRecordDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteVi
         initial_result = self.request.user.has_perms(perms)
 
         if not initial_result:
-            return self.request.user.has_perm('timesheets.change_attached_timerecord')
+            return self.request.user.has_perm('timesheets.delete_attached_timerecord')
         return initial_result
 
     def post(self, request, *args, **kwargs):
