@@ -28,7 +28,7 @@ def get_timesheet(**kwargs):
         employees = Employee.objects.filter(user__username__in=employees.split(','))
         filter_by.append('employee')
     else:
-        employees = Employee.objects.all().order_by('user__username')
+        employees = Employee.objects.all()
 
     from_date = kwargs.get('from_date', date.today() - timedelta(days=date.today().weekday()))
     to_date = kwargs.get('to_date', from_date + timedelta(days=6))
@@ -43,6 +43,7 @@ def get_timesheet(**kwargs):
     day_range = [to_date - timedelta(days=x) for x in range(0, date_span + 1)]
     day_range.reverse()
 
+    employees = employees.order_by('user__username')
     subprojects = subprojects.order_by('parent_project')
 
     bow = from_date - timedelta(days=from_date.weekday())
