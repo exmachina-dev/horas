@@ -260,6 +260,10 @@ form p {
     vertical-align: inherit;
 }
 
+#content table.timesheet_table th {
+    min-width: 5em;
+}
+
 #content table.project_table td.project_hours_cell {
     text-align: left;
     font-style: italic;
