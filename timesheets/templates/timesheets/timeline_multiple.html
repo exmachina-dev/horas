@@ -195,7 +195,7 @@ $(function() {
                     location.reload();
                 } else {
                     // handle error processed by server here
-                    alert("smth goes wrong");
+                    alert("Something went wrong: " + data.result);
                 }
             }).fail(function() {
                 // handle unexpected error here
