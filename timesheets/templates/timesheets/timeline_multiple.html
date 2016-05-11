@@ -20,9 +20,9 @@
         <a href="{% url 'timesheets:home' from_date=sjog.next_month|date:"Ymd" to_date=end_date|date:"Ymd" %}">+1 month</a>
     </span>
     <span class="now_jogline">
-        <a href="{% url 'timesheets:home' from_date=sjog.previous_week|date:"Ymd" to_date=start_date|date:"Ymd" %}">-1 week</a>
+        <a href="{% url 'timesheets:home' from_date=sjog.previous_week|date:"Ymd" to_date=sjog.previous_eow|date:"Ymd" %}">-1 week</a>
         {{ start_date|timesince:end_date }}
-        <a href="{% url 'timesheets:home' from_date=end_date|date:"Ymd" to_date=ejog.next_week|date:"Ymd" %}">+1 week</a>
+        <a href="{% url 'timesheets:home' from_date=sjog.next_week|date:"Ymd" to_date=ejog.next_eow|date:"Ymd" %}">+1 week</a>
     </span>
     <span class="end_jogline">
         <a href="{% url 'timesheets:home' to_date=ejog.previous_month|date:"Ymd" from_date=start_date|date:"Ymd" %}">-1 month</a>

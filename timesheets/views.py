@@ -44,23 +44,27 @@ def get_timesheet(**kwargs):
     day_range.reverse()
 
     bow = from_date - timedelta(days=from_date.weekday())
-    eow = from_date + timedelta(days=6 - from_date.weekday())
+    eow = from_date + timedelta(days=7 - from_date.isoweekday())
     from_jogline = {
         'beginning_of_week': bow,
+        'previous_eow': bow - timedelta(days=1),
         'previous_week': bow - timedelta(days=7),
         'previous_month': bow - timedelta(days=calendar.monthrange(from_date.year, from_date.month-1)[1]),
+        'next_eow': eow + timedelta(days=1),
         'next_week': bow + timedelta(days=7),
         'next_month': bow + timedelta(days=calendar.monthrange(from_date.year, from_date.month)[1]),
         'end_of_week': eow,
     }
 
     bow = to_date - timedelta(days=to_date.weekday())
-    eow = to_date + timedelta(days=6 - to_date.weekday())
+    eow = to_date + timedelta(days=7 - to_date.isoweekday())
     to_jogline = {
         'beginning_of_week': bow,
+        'previous_eow': bow - timedelta(days=1),
         'previous_week': eow - timedelta(days=7),
         'previous_month': eow - timedelta(days=calendar.monthrange(from_date.year, from_date.month-1)[1]),
-        'next_week': eow + timedelta(days=7),
+        'next_eow': eow + timedelta(days=7),
+        'next_week': bow + timedelta(days=7),
         'next_month': eow + timedelta(days=calendar.monthrange(from_date.year, from_date.month)[1]),
         'end_of_week': eow,
     }
