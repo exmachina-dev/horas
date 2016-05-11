@@ -159,7 +159,7 @@ class HomeView(LoginRequiredMixin, CreateView):
         if self.kwargs.get('to_date'):
             ts_kwargs.update({'to_date': datetime.strptime(self.kwargs.get('to_date'), '%Y%m%d')})
 
-        if not self.request.user.has_perm('view_from_all'):
+        if not self.request.user.has_perm('timesheets.view_from_all'):
             ts_kwargs.update({'employees': self.request.user.username})
         context.update(get_timesheet(**ts_kwargs))
 
