@@ -65,7 +65,7 @@ class SubProjectManager(models.Manager):
 
 
 class SubProject(models.Model):
-    initials = models.CharField(max_length=5)
+    initials = models.CharField(max_length=10)
     name = models.CharField(max_length=30)
     analytic_code = models.CharField(max_length=30, blank=True)
     parent_project = models.ForeignKey('Project', blank=True, null=True)
@@ -92,7 +92,7 @@ class SubProject(models.Model):
 
 
 class Project(models.Model):
-    initials = models.CharField(unique=True, max_length=5)
+    initials = models.CharField(unique=True, max_length=10)
     name = models.CharField(max_length=30)
     analytic_code = models.CharField(max_length=30, blank=True)
 
