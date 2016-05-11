@@ -43,6 +43,8 @@ def get_timesheet(**kwargs):
     day_range = [to_date - timedelta(days=x) for x in range(0, date_span + 1)]
     day_range.reverse()
 
+    subprojects = subprojects.order_by('parent_project')
+
     bow = from_date - timedelta(days=from_date.weekday())
     eow = from_date + timedelta(days=7 - from_date.isoweekday())
     from_jogline = {
