@@ -379,14 +379,15 @@ class TimeRecordDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteVi
             return self.request.user.has_perm('timesheets.delete_attached_timerecord')
         return initial_result
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         # Catch any rules before post
-        tr_employee = get_user_model().objects.get(pk=self.request.POST['employee']).employee
+        tr_object = TimeRecord.objects.get(pk=self.kwargs['pk'])
+        tr_employee = tr_object.employee
         if not tr_employee == self.request.user.employee and \
                 not self.request.user.has_perm('timesheet.change_attached_timerecord'):
             messages.add_message(request, messages.ERROR, self.get_permission_denied_message())
             return redirect(self.request.META['HTTP_REFERER'])
-        return super().post(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
 class SubProjectDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
