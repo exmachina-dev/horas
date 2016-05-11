@@ -257,7 +257,7 @@ class TimeRecordNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
 class SubProjectNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'timesheets/subproject_edit.html'
     form_class = SubProjectForm
-    success_url = '/subproject'
+    success_url = '/timesheets/subprojects'
     permission_required = 'timesheets.add_subproject'
     permission_denied_message = 'You don\'t have the permission to create subprojects.'
 
