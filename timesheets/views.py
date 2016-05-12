@@ -197,6 +197,7 @@ class SubProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = SubProject
     permission_required = 'timesheets.view_subproject_list'
     permission_denied_message = 'You don\'t have the permission to view the subproject list.'
+    ordering = 'parent_project'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -208,6 +209,9 @@ class SubProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         qs = super().get_queryset()
         if 'project' in self.kwargs and self.kwargs['project'] is not None:
             qs = qs.filter(parent_project=self.kwargs['project'])
+
+        if 'finished' in self.kwargs and self.kwargs['finished'] is not None:
+            qs = qs.filter(finished=self.kwargs['finished'])
 
         return qs
 

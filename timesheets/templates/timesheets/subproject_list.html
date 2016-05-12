@@ -17,8 +17,14 @@
         <th></th>
     </tr>
     {% for subproject in object_list %}
-    <tr>
-        {% if not project %}<td>{{ subproject.parent_project }}</td>{% endif %}
+    <tr {% if subproject.finished %}class="finished"{% endif %}>
+        {% if not project %}
+            {% ifchanged subproject.parent_project %}
+                <td>{{ subproject.parent_project }}</td>
+            {% else %}
+                <td></td>
+            {% endifchanged %}
+        {% endif %}
         <td>{{ subproject.initials|upper }}</td>
         <td>{{ subproject.name }}</td>
         <td>{{ subproject.total_hours|fhours }} - <a class="ico_view" href="{% url 'timesheets:home' subproject=subproject.pk %}">view</a></td>
