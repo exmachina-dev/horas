@@ -43,6 +43,11 @@ def get_timesheet(**kwargs):
     day_range = [to_date - timedelta(days=x) for x in range(0, date_span + 1)]
     day_range.reverse()
 
+    if kwargs.get('finished') is not None:
+        subprojects = subprojects.filter(finished=kwargs.get('finished'))
+    else:
+        subprojects = subprojects.filter(finished=False)
+
     employees = employees.order_by('user__username')
     subprojects = subprojects.order_by('parent_project')
 
