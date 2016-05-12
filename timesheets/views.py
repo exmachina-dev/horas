@@ -277,7 +277,7 @@ class SubProjectNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
 class ProjectNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'timesheets/project_edit.html'
     form_class = ProjectForm
-    success_url = '/projects'
+    success_url = '/timesheets/projects'
     permission_required = 'timesheets.add_project'
     permission_denied_message = 'You don\'t have the permission to create projects.'
 
