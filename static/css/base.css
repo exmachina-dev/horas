@@ -107,7 +107,6 @@ form {
 }
 
 form input, form select {
-    -webkit-appearance: none;
     box-sizing: content-box;
     display: inline-block;
     width: auto;
@@ -119,7 +118,21 @@ form input, form select {
     font-family: monospace;
 }
 form input[type="checkbox"] {
-    width: 19px;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    -webkit-appearance: none;
+    outline: 0;
+}
+form input[type=checkbox]:checked {
+    background-image: url('data:image/svg+xml;utf-8,<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19" id="svg2" version="1.1" xml:space="preserve"><rect style="opacity:1;fill:#000000;fill-opacity:0.03;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.3" id="rect" width="19" height="19" x="0" y="0" rx="3" ry="3" /><path style="fill:#000000;fill-opacity:0.75;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M 2.25,5.7 7.5,15 16,4 14,2 8,12 3,5 Z" id="checkmark" /></svg>');
+}
+form input[type=checkbox]:not(:checked) {
+    background-image: url('data:image/svg+xml;utf-8,<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19" id="svg2" version="1.1" xml:space="preserve"><rect style="opacity:1;fill:#000000;fill-opacity:0.03;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.3" id="rect" width="19" height="19" x="0" y="0" rx="3" ry="3" /></svg>');
 }
 form input[type="submit"] {
     margin: 1em;
