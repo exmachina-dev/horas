@@ -184,7 +184,14 @@ class HomeView(LoginRequiredMixin, CreateView):
         self.initial = super().get_initial()
         if hasattr(self.request.user, 'employee'):
             self.initial['employee'] = self.request.user.employee
+        if 'previous_subproject' in self.request.session:
+            self.initial['project'] = self.request.session['previous_subproject']
+
         return self.initial
+
+    def post(self, request, *args, **kwargs):
+        request.session['previous_subproject'] = request.POST['project']
+        return super().post(request, *args, **kwargs)
 
 
 class EmployeeListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
