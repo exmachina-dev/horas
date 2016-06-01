@@ -310,7 +310,6 @@ class SubProjectNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
     def get_initial(self):
         self.initial = super().get_initial()
         parent_project = self.kwargs.get('project')
-        print(parent_project)
         if parent_project:
             self.initial['parent_project'] = parent_project
 

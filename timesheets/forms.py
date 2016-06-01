@@ -10,8 +10,6 @@ class TimeRecordForm(ModelForm):
 
     def clean_project(self):
         project = self.cleaned_data['project']
-        print(project)
-        print(project.finished)
         if project.finished:
             raise ValidationError({'project': 'Project is finished.'})
         return project
