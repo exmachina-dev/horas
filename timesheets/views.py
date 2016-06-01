@@ -63,7 +63,9 @@ def get_timesheet(**kwargs):
         'beginning_of_week': bow,
         'previous_eow': bow - timedelta(days=1),
         'previous_week': bow - timedelta(days=7),
-        'previous_month': bow - timedelta(days=calendar.monthrange(from_date.year, from_date.month-1)[1]),
+        'previous_month': bow - timedelta(days=calendar.monthrange(
+            from_date.year if from_date.month > 1 else from_date.year-1,
+            from_date.month-1 if from_date.month > 1 else 12)[1]),
         'next_eow': eow + timedelta(days=1),
         'next_week': bow + timedelta(days=7),
         'next_month': bow + timedelta(days=calendar.monthrange(from_date.year, from_date.month)[1]),
@@ -76,7 +78,9 @@ def get_timesheet(**kwargs):
         'beginning_of_week': bow,
         'previous_eow': bow - timedelta(days=1),
         'previous_week': eow - timedelta(days=7),
-        'previous_month': eow - timedelta(days=calendar.monthrange(from_date.year, from_date.month-1)[1]),
+        'previous_month': eow - timedelta(days=calendar.monthrange(
+            from_date.year if from_date.month > 1 else from_date.year-1,
+            from_date.month-1 if from_date.month > 1 else 12)[1]),
         'next_eow': eow + timedelta(days=7),
         'next_week': bow + timedelta(days=7),
         'next_month': eow + timedelta(days=calendar.monthrange(from_date.year, from_date.month)[1]),
