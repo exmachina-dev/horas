@@ -256,8 +256,8 @@ form p {
 #content table tr.alt:hover {
     background: rgba(255, 255, 255, 0.8);
 }
-#content table tr.finished {
-    background: rgba(0, 0, 0, 0.4);
+#content table tr.finished, #content table td.finished {
+    background: rgba(0, 0, 0, 0.3);
 }
 #content table th {
     font-weight: normal;
