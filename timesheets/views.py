@@ -49,7 +49,7 @@ def get_timesheet(**kwargs):
         subprojects = subprojects.filter(finished=False)
 
     employees = employees.order_by('user__username')
-    subprojects = subprojects.order_by('parent_project')
+    subprojects = subprojects.order_by('parent_project', 'initials')
 
     bow = from_date - timedelta(days=from_date.weekday())
     eow = from_date + timedelta(days=7 - from_date.isoweekday())
@@ -197,7 +197,6 @@ class SubProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = SubProject
     permission_required = 'timesheets.view_subproject_list'
     permission_denied_message = 'You don\'t have the permission to view the subproject list.'
-    ordering = 'parent_project'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -213,6 +212,7 @@ class SubProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         if 'finished' in self.kwargs and self.kwargs['finished'] is not None:
             qs = qs.filter(finished=self.kwargs['finished'])
 
+        qs = qs.order_by('parent_project__initials', 'initials')
         return qs
 
 
