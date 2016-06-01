@@ -75,6 +75,7 @@ class SubProject(models.Model):
 
     class Meta:
         unique_together = ('initials', 'parent_project')
+        ordering = ('parent_project__initials', 'initials',)
         permissions = (
             ('view_subproject_list', 'Can view subproject list'),
         )
