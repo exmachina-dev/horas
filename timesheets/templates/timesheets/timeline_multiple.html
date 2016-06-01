@@ -215,7 +215,9 @@ $(function() {
         confirmButtonClass: "btn-danger",
         cancelButtonClass: "btn-info"
     });
-    $("#id_date").datepicker();
+    $("#id_date").datepicker({
+        dateFormat: "dd/mm/yy"
+    });
 });
 </script>
 {% endblock %}
