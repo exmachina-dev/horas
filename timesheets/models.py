@@ -87,10 +87,14 @@ class SubProject(models.Model):
     def total_hours(self):
         return self.timerecords.aggregate(models.Sum('hours'))['hours__sum']
 
-    def __str__(self):
+    @property
+    def uid(self):
         if self.parent_project:
-            return '{0.parent_project.initials}-{0.initials} - {0.name}'.format(self)
-        return '{} - {}'.format(self.initials, self.name)
+            return '{0.parent_project.initials}-{0.initials}'.format(self)
+        return '{}'.format(self.initials)
+
+    def __str__(self):
+        return '{0.uid} - {0.name}'.format(self)
 
 
 class Project(models.Model):
