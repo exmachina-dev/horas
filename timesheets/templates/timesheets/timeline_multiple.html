@@ -57,7 +57,7 @@
             <td class="project_hours_cell">{{ record.total_hours_by_project|fhours }}</td>
         </tr>
         {% endifchanged %}
-        <tr class="{% cycle "" "alt" %}">
+        <tr class="{% cycle "" "alt" %}"{% if record.subproject.category %} style="background-color: {{ record.subproject.category.color }};"{% endif %}>
             <td class="subproject_cell">
                 {{ record.subproject.initials|upper}} - {{ record.subproject.name }}
                 <span class="bubble">

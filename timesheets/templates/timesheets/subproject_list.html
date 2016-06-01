@@ -24,9 +24,9 @@
                 </tr>
             {% endifchanged %}
         {% endif %}
-        <tr {% if subproject.finished %}class="finished"{% endif %}>
-            <td>{{ subproject.initials|upper }}</td>
-            <td>{{ subproject.name }}</td>
+        <tr {% if subproject.category %}style="background-color: {{ subproject.category.color }};"{% endif %}>
+            <td {% if subproject.finished %}class="finished"{% endif %}>{{ subproject.initials|upper }}</td>
+            <td {% if subproject.finished %}class="finished"{% endif %}>{{ subproject.name }}</td>
             <td>{{ subproject.total_hours|fhours }} - <a class="ico_view" href="{% url 'timesheets:home' subproject=subproject.pk %}">view</a></td>
             <td><a class="ico_edit" href="{% url 'timesheets:subproject_edit' pk=subproject.id %}">edit</a><a class="ico_delete inline_delete" href="{% url 'timesheets:subproject_delete' pk=subproject.id %}">delete</a></td>
         </tr>
