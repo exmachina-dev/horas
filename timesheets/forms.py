@@ -26,4 +26,4 @@ class SubProjectForm(ModelForm):
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        fields = ['initials', 'name', 'analytic_code']
+        fields = ['initials', 'name', 'analytic_code', 'finished']

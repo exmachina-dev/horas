@@ -95,6 +95,7 @@ class Project(models.Model):
     initials = models.CharField(unique=True, max_length=10)
     name = models.CharField(max_length=30)
     analytic_code = models.CharField(max_length=30, blank=True)
+    finished = models.BooleanField(default=False)
 
     class Meta:
         permissions = (

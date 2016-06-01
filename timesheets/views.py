@@ -221,6 +221,13 @@ class ProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'timesheets.view_project_list'
     permission_denied_message = 'You don\'t have the permission to project list.'
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'finished' in self.kwargs and self.kwargs['finished'] is not None:
+            qs = qs.filter(finished=self.kwargs['finished'])
+
+        qs = qs.order_by('initials')
+        return qs
 
 class TimeRecordNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'timesheets/timerecord_edit.html'
