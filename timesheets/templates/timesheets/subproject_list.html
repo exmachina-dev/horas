@@ -11,25 +11,25 @@
 {% if project %}<p>Only showing subprojects for {{ project }}</p>{% endif %}
 <table>
     <tr>
-        {% if not project %}<th>Project</th>{% endif %}
         <th colspan="2">Subproject</th>
         <th>Hours</th>
         <th></th>
     </tr>
     {% for subproject in object_list %}
-    <tr {% if subproject.finished %}class="finished"{% endif %}>
         {% if not project %}
             {% ifchanged subproject.parent_project %}
-                <td>{{ subproject.parent_project }}</td>
-            {% else %}
-                <td></td>
+                <tr>
+                    <td colspan="3" class="project_cell"> Project: {{ subproject.parent_project }}</td>
+                    <td><a class="ico_add" href="{% url 'timesheets:subproject_new' project=subproject.parent_project.id %}">add subproject</a></td>
+                </tr>
             {% endifchanged %}
         {% endif %}
-        <td>{{ subproject.initials|upper }}</td>
-        <td>{{ subproject.name }}</td>
-        <td>{{ subproject.total_hours|fhours }} - <a class="ico_view" href="{% url 'timesheets:home' subproject=subproject.pk %}">view</a></td>
-        <td><a class="ico_edit" href="{% url 'timesheets:subproject_edit' pk=subproject.id %}">edit</a><a class="ico_delete inline_delete" href="{% url 'timesheets:subproject_delete' pk=subproject.id %}">delete</a></td>
-    </tr>
+        <tr {% if subproject.finished %}class="finished"{% endif %}>
+            <td>{{ subproject.initials|upper }}</td>
+            <td>{{ subproject.name }}</td>
+            <td>{{ subproject.total_hours|fhours }} - <a class="ico_view" href="{% url 'timesheets:home' subproject=subproject.pk %}">view</a></td>
+            <td><a class="ico_edit" href="{% url 'timesheets:subproject_edit' pk=subproject.id %}">edit</a><a class="ico_delete inline_delete" href="{% url 'timesheets:subproject_delete' pk=subproject.id %}">delete</a></td>
+        </tr>
     {% endfor %}
 </table>
 {% endblock %}

@@ -18,7 +18,7 @@ urlpatterns = patterns(
     url(r'^timerecord/(?P<pk>\d+)/$', TimeRecordEditView.as_view(), name='timerecord_edit'),
     url(r'^timerecord/(?P<pk>\d+)/delete$', TimeRecordDeleteView.as_view(), name='timerecord_delete'),
 
-    url(r'^subproject/new$', SubProjectNewView.as_view(), name='subproject_new'),
+    url(r'^subproject/new/(?:with_project/(?P<project>\d+)/)?$', SubProjectNewView.as_view(), name='subproject_new'),
     url(r'^subproject/(?P<pk>\d+)/$', SubProjectEditView.as_view(), name='subproject_edit'),
     url(r'^subproject/(?P<pk>\d+)/delete$', SubProjectDeleteView.as_view(), name='subproject_delete'),
 

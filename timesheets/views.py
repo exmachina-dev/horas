@@ -284,6 +284,15 @@ class SubProjectNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
 
         return context
 
+    def get_initial(self):
+        self.initial = super().get_initial()
+        parent_project = self.kwargs.get('project')
+        print(parent_project)
+        if parent_project:
+            self.initial['parent_project'] = parent_project
+
+        return self.initial
+
 
 class ProjectNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'timesheets/project_edit.html'
