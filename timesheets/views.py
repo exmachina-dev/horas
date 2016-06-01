@@ -7,8 +7,8 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 
-from .models import TimeRecord, Employee, SubProject, Project
-from .forms import TimeRecordForm, SubProjectForm, ProjectForm
+from .models import TimeRecord, Employee, SubProject, Project, Category
+from .forms import TimeRecordForm, SubProjectForm, ProjectForm, CategoryForm
 
 from .auth_mixins import LoginRequiredMixin, PermissionRequiredMixin
 
@@ -39,6 +39,12 @@ def get_timesheet(**kwargs):
         subprojects = SubProject.objects.filter(pk=kwargs.get('subproject'))
     else:
         subprojects = SubProject.objects.all()
+
+    category = kwargs.get('category')
+    if category:
+        subprojects = subprojects.filter(category_pk__in=category.split(','))
+        filter_by.append('category')
+
     date_span = (to_date - from_date).days
     day_range = [to_date - timedelta(days=x) for x in range(0, date_span + 1)]
     day_range.reverse()
@@ -229,6 +235,19 @@ class ProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         qs = qs.order_by('initials')
         return qs
 
+
+class CategoryListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = Category
+    permission_required = 'timesheets.view_category_list'
+    permission_denied_message = 'You don\'t have the permission to category list.'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        qs = qs.order_by('name')
+        return qs
+
+
 class TimeRecordNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'timesheets/timerecord_edit.html'
     form_class = TimeRecordForm
@@ -300,6 +319,20 @@ class ProjectNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     success_url = '/timesheets/projects'
     permission_required = 'timesheets.add_project'
     permission_denied_message = 'You don\'t have the permission to create projects.'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'create'
+
+        return context
+
+
+class CategoryNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    template_name = 'timesheets/category_edit.html'
+    form_class = CategoryForm
+    success_url = '/timesheets/categories'
+    permission_required = 'timesheets.add_category'
+    permission_denied_message = 'You don\'t have the permission to create categories.'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -380,6 +413,26 @@ class ProjectEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         return self.initial
 
 
+class CategoryEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    template_name = 'timesheets/category_edit.html'
+    form_class = CategoryForm
+    success_url = '/timesheets/categories'
+    model = Category
+    permission_required = 'timesheets.change_category'
+    permission_denied_message = 'You don\'t have the permission to edit categories.'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'update'
+
+        return context
+
+    def get_initial(self):
+        self.initial = super().get_initial()
+        self.initial['employee'] = self.request.user.employee
+        return self.initial
+
+
 class TimeRecordDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = TimeRecord
     template_name = 'timesheets/confirm_delete.html'
@@ -439,6 +492,24 @@ class ProjectDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
     success_url = '/timesheets/'
     permission_required = 'timesheets.delete_project'
     permission_denied_message = 'You don\'t have the permission to delete projects.'
+
+    def dispatch(self, *args, **kwargs):
+
+        response = super().dispatch(*args, **kwargs)
+        if self.request.is_ajax():
+            response_data = {"result": "ok"}
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        else:
+            return response
+
+
+class CategoryDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = Category
+    template_name = 'timesheets/confirm_delete.html'
+    success_url = '/timesheets/categories'
+    permission_required = 'timesheets.delete_category'
+    permission_denied_message = 'You don\'t have the permission to delete categories.'
 
     def dispatch(self, *args, **kwargs):
 

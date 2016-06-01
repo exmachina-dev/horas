@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
-from .models import TimeRecord, Project, SubProject
+from .models import TimeRecord, Project, SubProject, Category
 
 
 class TimeRecordForm(ModelForm):
@@ -20,10 +20,16 @@ class TimeRecordForm(ModelForm):
 class SubProjectForm(ModelForm):
     class Meta:
         model = SubProject
-        fields = ['initials', 'name', 'parent_project', 'analytic_code', 'finished']
+        fields = ['initials', 'name', 'parent_project', 'analytic_code', 'finished', 'category']
 
 
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
         fields = ['initials', 'name', 'analytic_code', 'finished']
+
+
+class CategoryForm(ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name', 'color', 'description']

@@ -1,0 +1,27 @@
+{% extends 'struct/base.html' %}
+{% load math_filters %}
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+{% if perms.timesheets.add_category %}
+<p>
+    <a class="ico_add" href="{% url 'timesheets:category_new' %}">new category</a>
+</p>
+{% endif %}
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Subprojects</th>
+        <th>Hours</th>
+        <th></th>
+    </tr>
+    {% for category in object_list %}
+    <tr>
+        <td>{{ category.name|title }}</td>
+        <td>{{ category.subprojects.count }} - <a class="ico_view" href="{% url 'timesheets:subproject_list' category=category.id %}">view</a></td>
+        <td>{{ category.total_hours|fhours }} - <a class="ico_view" href="{% url 'timesheets:home' category=category.id %}">view</a></td>
+        <td><a class="ico_edit" href="{% url 'timesheets:category_edit' pk=category.id %}">edit</a><a class="ico_delete inline_delete" href="{% url 'timesheets:category_delete' pk=category.id %}">delete</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

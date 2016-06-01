@@ -70,6 +70,7 @@ class SubProject(models.Model):
     analytic_code = models.CharField(max_length=30, blank=True)
     parent_project = models.ForeignKey('Project', blank=True, null=True)
     finished = models.BooleanField(default=False)
+    category = models.ForeignKey('Category', blank=True, null=True)
     objects = SubProjectManager()
 
     class Meta:
@@ -115,3 +116,31 @@ class Project(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.initials, self.name)
+
+
+class Category(models.Model):
+    name = models.CharField(unique=True, max_length=30)
+    description = models.CharField(max_length=100, blank=True)
+    color = models.CharField(
+        max_length=25, default="#af0000",
+        help_text="Color in CSS format (hexadecimal or rgb format)")
+
+    class Meta:
+        verbose_name_plural = 'categories'
+        permissions = (
+            ('view_category_list', 'Can view category list'),
+        )
+
+    @property
+    def subprojects(self):
+        return SubProject.objects.filter(category=self)
+
+    @property
+    def timerecords(self):
+        return TimeRecord.objects.filter(project=self.subprojects)
+
+    def total_hours(self):
+        return self.timerecords.aggregate(models.Sum('hours'))['hours__sum']
+
+    def __str__(self):
+        return '{}'.format(self.name)
