@@ -18,7 +18,8 @@ class TimeRecordForm(ModelForm):
 class SubProjectForm(ModelForm):
     class Meta:
         model = SubProject
-        fields = ['initials', 'name', 'parent_project', 'analytic_code', 'finished', 'category']
+        fields = ['initials', 'name', 'parent_project', 'analytic_code',
+        'assigned_hours', 'finished', 'category']
 
 
 class ProjectForm(ModelForm):

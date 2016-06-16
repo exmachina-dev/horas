@@ -71,6 +71,7 @@ class SubProject(models.Model):
     parent_project = models.ForeignKey('Project', blank=True, null=True)
     finished = models.BooleanField(default=False)
     category = models.ForeignKey('Category', blank=True, null=True)
+    assigned_hours = models.FloatField(default=0.0, blank=0.0)
     objects = SubProjectManager()
 
     class Meta:
@@ -78,6 +79,7 @@ class SubProject(models.Model):
         ordering = ('parent_project__initials', 'initials',)
         permissions = (
             ('view_subproject_list', 'Can view subproject list'),
+            ('view_assigned_hours', 'Can view assigned hours'),
         )
 
     @property
@@ -115,6 +117,11 @@ class Project(models.Model):
     @property
     def timerecords(self):
         return TimeRecord.objects.filter(project=self.subprojects)
+    @property
+    def assigned_hours(self):
+        return self.subprojects.aggregate(
+                models.Sum('assgined_hours'))['assigned_hours__sum']
+
 
     def total_hours(self):
         return self.timerecords.aggregate(models.Sum('hours'))['hours__sum']
