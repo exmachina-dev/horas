@@ -6,11 +6,17 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from rest_framework import viewsets
+from rest_framework import filters
 
-from .models import TimeRecord, Employee, SubProject, Project, Category
-from .forms import TimeRecordForm, SubProjectForm, ProjectForm, CategoryForm
+from .models import TimeRecord
+from projects.models import Project
+from users.models import Employee
+from tasks.models import Task
+from .forms import TimeRecordForm
 
-from .auth_mixins import LoginRequiredMixin, PermissionRequiredMixin
+#from .serializers import TimeRecordSerializer
+from utils.auth_mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from datetime import date
 from datetime import timedelta
@@ -34,28 +40,23 @@ def get_timesheet(**kwargs):
     to_date = kwargs.get('to_date', from_date + timedelta(days=6))
 
     if kwargs.get('project'):
-        subprojects = Project.objects.get(pk=kwargs.get('project')).subprojects
-    elif kwargs.get('subproject'):
-        subprojects = SubProject.objects.filter(pk=kwargs.get('subproject'))
+        projects = Project.objects.get(pk=kwargs.get('project')).projects
     else:
-        subprojects = SubProject.objects.all()
+        projects = Project.objects.all()
 
     category = kwargs.get('category')
-    if category:
-        subprojects = subprojects.filter(category_pk__in=category.split(','))
-        filter_by.append('category')
 
     date_span = (to_date - from_date).days
     day_range = [to_date - timedelta(days=x) for x in range(0, date_span + 1)]
     day_range.reverse()
 
-    if kwargs.get('finished') is not None:
-        subprojects = subprojects.filter(finished=kwargs.get('finished'))
+    if kwargs.get('is_closed') is not None:
+        projects = projects.filter(is_closed=kwargs.get('is_closed'))
     else:
-        subprojects = subprojects.filter(finished=False)
+        projects = projects.filter(is_closed=False)
 
     employees = employees.order_by('user__username')
-    subprojects = subprojects.order_by('parent_project', 'initials')
+    projects = projects.order_by('parent_project', 'initials')
 
     bow = from_date - timedelta(days=from_date.weekday())
     eow = from_date + timedelta(days=7 - from_date.isoweekday())
@@ -89,27 +90,27 @@ def get_timesheet(**kwargs):
 
     timesheet = []
 
-    for subproject in subprojects:
-        project_tr = subproject.parent_project.timerecords.filter(date__range=(from_date, to_date), employee__in=employees).order_by('date')
-        subproject_tr = project_tr.filter(project=subproject).order_by('date')
+    for project in projects:
+        project_tr = project.parent_project.timerecords.filter(date__range=(from_date, to_date), employee__in=employees).order_by('date')
+        project_tr = project_tr.filter(project=project).order_by('date')
         cur_date = from_date
-        subproject_ts = []
+        project_ts = []
         while cur_date <= to_date:
-            date_tr = subproject_tr.filter(date=cur_date)
+            date_tr = project_tr.filter(date=cur_date)
             hours_by_project = project_tr.filter(date=cur_date).aggregate(Sum('hours'))['hours__sum'] or None
-            subproject_ts.append({
+            project_ts.append({
                 'date': cur_date,
                 'timerecords': date_tr.order_by('employee'),
-                'total_hours_by_subproject': date_tr.aggregate(Sum('hours'))['hours__sum'] or None,
+                'total_hours_by_project': date_tr.aggregate(Sum('hours'))['hours__sum'] or None,
                 'total_hours_by_project': hours_by_project,
             })
             cur_date = cur_date + timedelta(days=1)
         timesheet.append({
-            'subproject': subproject,
-            'total_hours_by_subproject': subproject_tr.aggregate(Sum('hours'))['hours__sum'] or None,
-            'timesheet': subproject_ts,
-            'project': subproject.parent_project,
-            'total_hours_by_project': subproject.parent_project.timerecords.filter(date__range=(from_date, to_date), employee__in=employees).aggregate(Sum('hours'))['hours__sum'] or None,
+            'project': project,
+            'total_hours_by_project': project_tr.aggregate(Sum('hours'))['hours__sum'] or None,
+            'timesheet': project_ts,
+            'project': project.parent_project,
+            'total_hours_by_project': project.parent_project.timerecords.filter(date__range=(from_date, to_date), employee__in=employees).aggregate(Sum('hours'))['hours__sum'] or None,
         })
 
     cur_date = from_date
@@ -136,7 +137,7 @@ def get_timesheet(**kwargs):
     context = {
         'filter_by': filter_by,
         'employees': employees.order_by('user__username'),
-        'subprojects': subprojects,
+        'projects': projects,
         'days': day_range,
         'timesheet': timesheet,
         'total_hours': total_hours_ts,
@@ -151,7 +152,7 @@ def get_timesheet(**kwargs):
 
 
 class HomeView(LoginRequiredMixin, CreateView):
-    template_name = 'timesheets/home.html'
+    template_name = 'timesheets/timesheet.html'
     form_class = TimeRecordForm
     initial = {
         'hours': 1.0,
@@ -196,41 +197,17 @@ class HomeView(LoginRequiredMixin, CreateView):
 
 class EmployeeListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Employee
-    template_name = 'timesheets/employees.html'
 
 
 class TimeSheetView(LoginRequiredMixin, ListView):
     model = TimeRecord
-    template_name = "timesheets/home.html"
+    template_name = 'timesheets/timesheet.html'
 
     def get_context_data(self):
         context = super().get_context_data()
         context.update(get_timesheet(**self.kwargs))
 
         return context
-
-
-class SubProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = SubProject
-    permission_required = 'timesheets.view_subproject_list'
-    permission_denied_message = 'You don\'t have the permission to view the subproject list.'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if 'project' in self.kwargs and self.kwargs['project'] is not None:
-            context['project'] = Project.objects.get(pk=self.kwargs['project'])
-        return context
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        if 'project' in self.kwargs and self.kwargs['project'] is not None:
-            qs = qs.filter(parent_project=self.kwargs['project'])
-
-        if 'finished' in self.kwargs and self.kwargs['finished'] is not None:
-            qs = qs.filter(finished=self.kwargs['finished'])
-
-        qs = qs.order_by('parent_project__initials', 'initials')
-        return qs
 
 
 class ProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -244,18 +221,6 @@ class ProjectListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
             qs = qs.filter(finished=self.kwargs['finished'])
 
         qs = qs.order_by('initials')
-        return qs
-
-
-class CategoryListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = Category
-    permission_required = 'timesheets.view_category_list'
-    permission_denied_message = 'You don\'t have the permission to category list.'
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-
-        qs = qs.order_by('name')
         return qs
 
 
@@ -301,56 +266,6 @@ class TimeRecordNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
         return super().post(request, *args, **kwargs)
 
 
-class SubProjectNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    template_name = 'timesheets/subproject_edit.html'
-    form_class = SubProjectForm
-    success_url = '/timesheets/subprojects'
-    permission_required = 'timesheets.add_subproject'
-    permission_denied_message = 'You don\'t have the permission to create subprojects.'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['action'] = 'create'
-
-        return context
-
-    def get_initial(self):
-        self.initial = super().get_initial()
-        parent_project = self.kwargs.get('project')
-        if parent_project:
-            self.initial['parent_project'] = parent_project
-
-        return self.initial
-
-
-class ProjectNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    template_name = 'timesheets/project_edit.html'
-    form_class = ProjectForm
-    success_url = '/timesheets/projects'
-    permission_required = 'timesheets.add_project'
-    permission_denied_message = 'You don\'t have the permission to create projects.'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['action'] = 'create'
-
-        return context
-
-
-class CategoryNewView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    template_name = 'timesheets/category_edit.html'
-    form_class = CategoryForm
-    success_url = '/timesheets/categories'
-    permission_required = 'timesheets.add_category'
-    permission_denied_message = 'You don\'t have the permission to create categories.'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['action'] = 'create'
-
-        return context
-
-
 class TimeRecordEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'timesheets/timerecord_edit.html'
     model = TimeRecord
@@ -381,66 +296,6 @@ class TimeRecordEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
             messages.add_message(request, messages.ERROR, self.get_permission_denied_message())
             return redirect(self.request.META['HTTP_REFERER'])
         return super().post(request, *args, **kwargs)
-
-
-class SubProjectEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    template_name = 'timesheets/subproject_edit.html'
-    form_class = SubProjectForm
-    model = SubProject
-    success_url = '/timesheets/subprojects'
-    permission_required = 'timesheets.change_subproject'
-    permission_denied_message = 'You don\'t have the permission to edit subprojects.'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['action'] = 'update'
-
-        return context
-
-    def get_initial(self):
-        self.initial = super().get_initial()
-        self.initial['employee'] = self.request.user.employee
-        return self.initial
-
-
-class ProjectEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    template_name = 'timesheets/project_edit.html'
-    form_class = ProjectForm
-    success_url = '/timesheets/projects'
-    model = Project
-    permission_required = 'timesheets.change_project'
-    permission_denied_message = 'You don\'t have the permission to edit projects.'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['action'] = 'update'
-
-        return context
-
-    def get_initial(self):
-        self.initial = super().get_initial()
-        self.initial['employee'] = self.request.user.employee
-        return self.initial
-
-
-class CategoryEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    template_name = 'timesheets/category_edit.html'
-    form_class = CategoryForm
-    success_url = '/timesheets/categories'
-    model = Category
-    permission_required = 'timesheets.change_category'
-    permission_denied_message = 'You don\'t have the permission to edit categories.'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['action'] = 'update'
-
-        return context
-
-    def get_initial(self):
-        self.initial = super().get_initial()
-        self.initial['employee'] = self.request.user.employee
-        return self.initial
 
 
 class TimeRecordDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -474,59 +329,46 @@ class TimeRecordDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteVi
         if not tr_employee == self.request.user.employee and \
                 not self.request.user.has_perm('timesheet.change_attached_timerecord'):
             messages.add_message(request, messages.ERROR, self.get_permission_denied_message())
-            return redirect(self.request.META['HTTP_REFERER'])
+            if not self.request.is_ajax():
+                return redirect(self.request.META['HTTP_REFERER'])
         return super().get(request, *args, **kwargs)
 
 
-class SubProjectDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    model = SubProject
-    template_name = 'timesheets/confirm_delete.html'
-    success_url = '/timesheets/'
-    permission_required = 'timesheets.delete_subproject'
-    permission_denied_message = 'You don\'t have the permission to delete subprojects.'
-
-    def dispatch(self, *args, **kwargs):
-
-        response = super().dispatch(*args, **kwargs)
-        if self.request.is_ajax():
-            response_data = {"result": "ok"}
-            return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-        else:
-            return response
-
-
-class ProjectDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    model = Project
-    template_name = 'timesheets/confirm_delete.html'
-    success_url = '/timesheets/'
-    permission_required = 'timesheets.delete_project'
-    permission_denied_message = 'You don\'t have the permission to delete projects.'
-
-    def dispatch(self, *args, **kwargs):
-
-        response = super().dispatch(*args, **kwargs)
-        if self.request.is_ajax():
-            response_data = {"result": "ok"}
-            return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-        else:
-            return response
-
-
-class CategoryDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    model = Category
-    template_name = 'timesheets/confirm_delete.html'
-    success_url = '/timesheets/categories'
-    permission_required = 'timesheets.delete_category'
-    permission_denied_message = 'You don\'t have the permission to delete categories.'
-
-    def dispatch(self, *args, **kwargs):
-
-        response = super().dispatch(*args, **kwargs)
-        if self.request.is_ajax():
-            response_data = {"result": "ok"}
-            return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-        else:
-            return response
+#class TimeRecordViewSet(viewsets.ModelViewSet):
+#    queryset = TimeRecord.objects.all()
+#    serializer_class = TimeRecordSerializer
+#    filter_backends = (filters.DjangoFilterBackend,)
+#    filter_fields = ('project', 'task')
+#
+#
+#class SubProjectViewSet(viewsets.ModelViewSet):
+#    lookup_field = 'initials'
+#    queryset = SubProject.objects.order_by('parent_project__initials', 'initials')
+#    serializer_class = SubProjectSerializer
+#    filter_backends = (filters.DjangoFilterBackend,)
+#    filter_fields = ('parent_project', 'finished')
+#
+#
+#class ProjectViewSet(viewsets.ModelViewSet):
+#    lookup_field = 'initials'
+#    queryset = Project.objects.order_by('initials')
+#    serializer_class = ProjectSerializer
+#    filter_fackends = (filters.DjangoFilterBackend,)
+#
+#
+#class CategoryViewSet(viewsets.ModelViewSet):
+#    queryset = Category.objects.order_by('name')
+#    serializer_class = CategorySerializer
+#
+#
+#class TaskViewSet(viewsets.ModelViewSet):
+#    lookup_field = 'initials'
+#    queryset = Task.objects.order_by('initials')
+#    serializer_class = TaskSerializer
+#
+#
+#class EmployeeViewSet(viewsets.ModelViewSet):
+#    lookup_field = 'user__username'
+#    queryset = Employee.objects.filter(user__is_active=True).order_by('user__username')
+#    serializer_class = EmployeeSerializer
+#    filter_backends = (filters.DjangoFilterBackend,)

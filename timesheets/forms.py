@@ -1,34 +1,15 @@
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
-from .models import TimeRecord, Project, SubProject, Category
+from .models import TimeRecord
 
 
 class TimeRecordForm(ModelForm):
     class Meta:
         model = TimeRecord
-        fields = ['employee', 'date', 'project', 'hours']
+        fields = ['employee', 'date', 'task', 'hours']
 
     def clean_project(self):
-        project = self.cleaned_data['project']
-        if project.finished:
-            raise ValidationError({'project': 'Project is finished.'})
+        task = self.cleaned_data['task']
+        if task.parent_project.is_closed:
+            raise ValidationError({'task': 'Project is closed.'})
         return project
-
-
-class SubProjectForm(ModelForm):
-    class Meta:
-        model = SubProject
-        fields = ['initials', 'name', 'parent_project', 'analytic_code',
-        'assigned_hours', 'finished', 'category']
-
-
-class ProjectForm(ModelForm):
-    class Meta:
-        model = Project
-        fields = ['initials', 'name', 'analytic_code', 'finished']
-
-
-class CategoryForm(ModelForm):
-    class Meta:
-        model = Category
-        fields = ['name', 'color', 'description']
