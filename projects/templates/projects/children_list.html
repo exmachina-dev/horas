@@ -1,0 +1,15 @@
+{% load math_filters %}
+{% for child in children %}
+<td>{{ "⪧ "|multiply:level }} {{ child.get_full_initials }}</td>
+    <td>{{ child.description }}</td>
+    <td>{{ child.childs.count }} - <a class="ico_view" href="{% url 'projects:project_list' project=child.pk %}">view</a></td>
+    <td>{{ child.total_hours|fhours }}</td>
+    <td><a class="ico_edit" href="{% url 'projects:project_edit' project=child.pk %}">edit</a><a class="ico_delete inline_delete" href="{% url 'projects:project_delete' project=child.pk %}">delete</a></td>
+    {% if child.childs.exists %}
+<tr>
+       {% with children=child.childs.all level=level|add:1 %}
+            {% include "projects/children_list.html" %}
+        {% endwith %}    
+</tr>
+    {% endif %}
+{% endfor %}

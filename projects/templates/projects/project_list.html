@@ -1,0 +1,35 @@
+{% extends 'struct/base.html' %}
+{% load math_filters %}
+{% block title %}Project list{% endblock %}
+
+{% block content %}
+{% if perms.projects.add_subproject %}
+<p>
+    <a class="ico_add" href="{% url 'projects:project_new' %}">new project</a>
+</p>
+{% endif %}
+<table>
+    <tr>
+        <th colspan="2">Project</th>
+        <th>Subprojects</th>
+        <th>Hours</th>
+        <th></th>
+    </tr>
+    {% for project in object_list %}
+    {% if not project.parent_project %}
+    <tr>
+        <td>{{ project.get_full_initials|upper }}</td>
+        <td>{{ project.description }}</td>
+        <td>{{ project.childs.count }} - <a class="ico_view" href="{% url 'projects:project_list' project=project.pk %}">view</a></td>
+        <td>{{ project.total_hours|fhours }}</td>
+        <td><a class="ico_edit" href="{% url 'projects:project_edit' project=project.pk %}">edit</a><a class="ico_delete inline_delete" href="{% url 'projects:project_delete' project=project.pk %}">delete</a></td>
+    </tr>
+    <tr>
+    {% with children=project.childs.all level=1 %}
+        {% include "projects/children_list.html" %}
+    {% endwith %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+{% endblock %}
