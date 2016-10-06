@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(__file__)
 
 
 # Quick-start development settings - unsuitable for production
@@ -36,10 +36,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'home',
+    'users',
+    'projects',
+    'tasks',
     'timesheets',
 )
 
-AUTH_PROFILE_MODULE = 'timesheets.employee'
+AUTH_PROFILE_MODULE = 'users.Employee'
 LOGIN_URL = 'login'
 
 MIDDLEWARE_CLASSES = (
@@ -52,9 +58,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'horas.urls'
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
+}
 
-WSGI_APPLICATION = 'horas.wsgi.application'
+ROOT_URLCONF = 'urls'
+
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
